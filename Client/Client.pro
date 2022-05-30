@@ -15,7 +15,9 @@ SOURCES += \
     UI/Components/customlineedit.cpp \
     UI/Components/custompushbutton.cpp \
     UI/Components/customtextedit.cpp \
+    UI/Components/gamesentenceframe.cpp \
     UI/Components/nicknameinputdialog.cpp \
+    UI/Components/timerwidget.cpp \
     UI/Components/userlistviewitem.cpp \
     UI/Components/userlistview.cpp \
     UI/Screens/joinlobbyscreen.cpp \
@@ -37,7 +39,9 @@ HEADERS += \
     UI/Components/customlineedit.h \
     UI/Components/custompushbutton.h \
     UI/Components/customtextedit.h \
+    UI/Components/gamesentenceframe.h \
     UI/Components/nicknameinputdialog.h \
+    UI/Components/timerwidget.h \
     UI/Components/userlistviewitem.h \
     UI/Components/userlistview.h \
     UI/Screens/joinlobbyscreen.h \
