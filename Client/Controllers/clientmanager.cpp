@@ -1,40 +1,70 @@
-#include "gamemanager.h"
+#include "clientmanager.h"
 
-GameManager *GameManager::instance = nullptr;
+ClientManager *ClientManager::instance = nullptr;
 
-GameManager::GameManager(QObject *parent)
+ClientManager::ClientManager(QObject *parent)
     : QObject{parent}, clientID(""), lobbyID("") {
     messageProcessHandler = new MessageProcessHandler(this);
 
     // Socket related message process handler connections
-    connect(this, &GameManager::processSocketMessage, messageProcessHandler, &MessageProcessHandler::processSocketMessage);
-    connect(messageProcessHandler, &MessageProcessHandler::setClientID, this, &GameManager::setClientID);
-    connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &GameManager::onLobbyJoined);
-    connect(messageProcessHandler, &MessageProcessHandler::userListUpdated, this, &GameManager::userListChanged);
-    connect(messageProcessHandler, &MessageProcessHandler::readyListUpdated, this, &GameManager::readyListChanged);
-    connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessageRecieved, this, &GameManager::newLobbyMessageRecieved);
+    connect(this, &ClientManager::processSocketMessage, messageProcessHandler, &MessageProcessHandler::processSocketMessage);
+    connect(messageProcessHandler, &MessageProcessHandler::setClientID, this, &ClientManager::setClientID);
+    connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &ClientManager::onLobbyJoined);
+    connect(messageProcessHandler, &MessageProcessHandler::userListUpdated, this, &ClientManager::userListChanged);
+    connect(messageProcessHandler, &MessageProcessHandler::readyListUpdated, this, &ClientManager::readyListChanged);
+    connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessageRecieved, this, &ClientManager::newLobbyMessageRecieved);
 
     // Screen related message process handler connections
-    connect(this, &GameManager::processScreenMessage, messageProcessHandler, &MessageProcessHandler::processScreenMessage);
-    connect(messageProcessHandler, &MessageProcessHandler::connectToServerRequest, this, &GameManager::connectToServerRequest);
-    connect(messageProcessHandler, &MessageProcessHandler::createLobbyRequest, this, &GameManager::createLobbyRequest);
-    connect(messageProcessHandler, &MessageProcessHandler::joinLobbyRequest, this, &GameManager::joinLobbyRequested);
-    connect(messageProcessHandler, &MessageProcessHandler::quitLobbyRequest, this, &GameManager::quitLobbyRequest);
-    connect(messageProcessHandler, &MessageProcessHandler::sendLobbyMessageRequest, this, &GameManager::sendLobbyMessageRequested);
-    connect(messageProcessHandler, &MessageProcessHandler::toggleReadyRequest, this, &GameManager::toggleReadyRequest);
+    connect(this, &ClientManager::processScreenMessage, messageProcessHandler, &MessageProcessHandler::processScreenMessage);
+    connect(messageProcessHandler, &MessageProcessHandler::connectToServerRequest, this, &ClientManager::connectToServerRequest);
+    connect(messageProcessHandler, &MessageProcessHandler::createLobbyRequest, this, &ClientManager::createLobbyRequest);
+    connect(messageProcessHandler, &MessageProcessHandler::joinLobbyRequest, this, &ClientManager::joinLobbyRequested);
+    connect(messageProcessHandler, &MessageProcessHandler::quitLobbyRequest, this, &ClientManager::quitLobbyRequest);
+    connect(messageProcessHandler, &MessageProcessHandler::sendLobbyMessageRequest, this, &ClientManager::sendLobbyMessageRequested);
+    connect(messageProcessHandler, &MessageProcessHandler::toggleReadyRequest, this, &ClientManager::toggleReadyRequest);
 
-    connect(messageProcessHandler, &MessageProcessHandler::error, this, &GameManager::error);
+    connect(messageProcessHandler, &MessageProcessHandler::error, this, &ClientManager::error);
+
+    readNickname();
 }
 
-QString GameManager::getLobbyID() { return lobbyID; }
+ClientManager::~ClientManager() {
+    writeNickname();
+}
 
 
-void GameManager::setClientID(QString clientID) {
+void ClientManager::readNickname() {
+    QFile file("nickname.txt");
+
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream in(&file);
+        QString text = in.readAll();
+
+        nickname = text;
+
+        file.close();
+    }
+}
+
+void ClientManager::writeNickname() {
+    QFile file("nickname.txt");
+    if(file.open(QFile::WriteOnly | QFile::Text)) {
+        QTextStream out(&file);
+        out << nickname;
+        file.flush();
+        file.close();
+    }
+}
+
+QString ClientManager::getLobbyID() { return lobbyID; }
+
+
+void ClientManager::setClientID(QString clientID) {
     this->clientID = clientID;
     emit clientConnected();
 }
 
-void GameManager::setLobbyID(QString newLobbyID) {
+void ClientManager::setLobbyID(QString newLobbyID) {
     // This if statement prevents an unecessary signal emission
     if (lobbyID != newLobbyID) {
         lobbyID = newLobbyID;
@@ -47,34 +77,56 @@ void GameManager::setLobbyID(QString newLobbyID) {
     }
 }
 
-void GameManager::toggleReadyRequest() {
+void ClientManager::toggleReadyRequest() {
     emit newMessageReadyToSend("type:toggleReady;payLoad:0;lobbyID:" + lobbyID + ";senderID:" + clientID);
 }
 
-void GameManager::createLobbyRequest(QString nickname) {
-    this->nickname = nickname;
-    emit newMessageReadyToSend("type:createGame;payLoad:0;senderID:" + clientID + ";nickname:" + nickname);
+void ClientManager::createLobbyRequest() {
+    QString newNickname = NicknameInputDialog::getNickname(nickname);
+
+    qDebug() << nickname << " " << newNickname;
+
+    if (newNickname.isEmpty()) {
+        emit error("blankNickError");
+    } else if (newNickname != "*CLOSED") {
+        emit newMessageReadyToSend("type:createGame;payLoad:0;senderID:" + clientID + ";nickname:" + newNickname);
+
+        if (nickname != newNickname) {
+            nickname = newNickname;
+            writeNickname();
+        }
+    }
 }
 
-void GameManager::joinLobbyRequested(QString targetLobbyID, QString nickname) {
-    this->nickname = nickname;
-    emit newMessageReadyToSend("type:joinGame;payLoad:" + targetLobbyID + ";senderID:" + clientID + ";nickname:" + nickname);
+void ClientManager::joinLobbyRequested(QString targetLobbyID) {
+    QString newNickname = NicknameInputDialog::getNickname(nickname);
+
+    if (newNickname.isEmpty()) {
+        emit error("blankNickError");
+    } else if (newNickname[0] != '*') {
+        emit newMessageReadyToSend("type:joinGame;payLoad:" + targetLobbyID + ";senderID:" + clientID + ";nickname:" + newNickname);
+
+        if (nickname != newNickname) {
+            nickname = newNickname;
+            writeNickname();
+        }
+    }
 }
 
-void GameManager::sendLobbyMessageRequested(QString message) {
+void ClientManager::sendLobbyMessageRequested(QString message) {
     emit newMessageReadyToSend("type:message;payLoad:" + message + ";lobbyID:" + lobbyID + ";senderID:" + clientID);
 }
 
-void GameManager::quitLobbyRequest() {
+void ClientManager::quitLobbyRequest() {
     emit newMessageReadyToSend("type:quitLobbyRequest;payLoad:0;lobbyID:" + lobbyID + ";senderID:" + clientID);
 }
 
-void GameManager::onLobbyJoined(QString lobbyID, QStringList newUserList) {
+void ClientManager::onLobbyJoined(QString lobbyID, QStringList newUserList) {
     setLobbyID(lobbyID);
     emit userListChanged(newUserList);
     emit joinedLobby();
 }
 
-void GameManager::leaveLobby() {
-    nickname = lobbyID = "";
+void ClientManager::leaveLobby() {
+    lobbyID = "";
 }

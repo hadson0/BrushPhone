@@ -27,8 +27,8 @@ signals:
     // Screen related signals
     void connectToServerRequest();
     void displayScreenRequest(QString destinationScreen);
-    void createLobbyRequest(QString userNick);
-    void joinLobbyRequest(QString newLobbyID, QString nickname);
+    void createLobbyRequest();
+    void joinLobbyRequest(QString newLobbyID);
     void sendLobbyMessageRequest(QString message);
     void toggleReadyRequest();
     void quitLobbyRequest();

@@ -1,11 +1,16 @@
-#ifndef GAMEMANAGER_H
-#define GAMEMANAGER_H
+#ifndef CLIENTMANAGER_H
+#define CLIENTMANAGER_H
 
 #include <QObject>
+#include <QFile>
+#include <QString>
+#include <QDebug>
+#include <QTextStream>
 
 #include "Controllers/messageprocesshandler.h"
+#include "UI/Components/nicknameinputdialog.h"
 
-class GameManager : public QObject {
+class ClientManager : public QObject {
     Q_OBJECT
 
     QString clientID; // Lobby host ID (who created the lobby)
@@ -13,18 +18,22 @@ class GameManager : public QObject {
 
     MessageProcessHandler *messageProcessHandler;
 
-    static GameManager *instance;
-    GameManager(QObject *parent = nullptr);
+    static ClientManager *instance;
+    ClientManager(QObject *parent = nullptr);
+
+    void readNickname();
+    void writeNickname();
 
 public:
-    GameManager(const GameManager &obj) = delete;
-    GameManager(const GameManager &&obj) = delete;
-    GameManager operator=(GameManager &obj) = delete;
-    GameManager operator=(GameManager &&obj) = delete;
+    ClientManager(const ClientManager &obj) = delete;
+    ClientManager(const ClientManager &&obj) = delete;
+    ClientManager operator=(ClientManager &obj) = delete;
+    ClientManager operator=(ClientManager &&obj) = delete;
+    ~ClientManager();
 
-    static GameManager *getInstance(QObject *parent = nullptr) {
+    static ClientManager *getInstance(QObject *parent = nullptr) {
         if (instance == nullptr) {
-            instance = new GameManager(parent);
+            instance = new ClientManager(parent);
         }
 
         return instance;
@@ -40,8 +49,8 @@ public slots:
 
     // Methods   
     void toggleReadyRequest();
-    void createLobbyRequest(QString nickname);
-    void joinLobbyRequested(QString lobbyID, QString nickname);
+    void createLobbyRequest();
+    void joinLobbyRequested(QString lobbyID);
     void quitLobbyRequest();
     void sendLobbyMessageRequested(QString message);
     void onLobbyJoined(QString lobbyID, QStringList userList);
@@ -62,7 +71,7 @@ signals:
     void newMessageReadyToSend(QString message);
     void joinedLobby();
 
-    void error(QString error);
+    void error(QString error);    
 };
 
-#endif // GAMEMANAGER_H
+#endif // CLIENTMANAGER_H

@@ -100,22 +100,17 @@ void MessageProcessHandler::processScreenMessage(QString message) {
 
     }
 
-    // type:createLobbyRequest;payload:0;nickname:hadson0
+    // type:createLobbyRequest;payload:0
     if (type == "createLobbyRequest") {
-        nickname = getMessageData(message, "nickname");
-
-        if (!nickname.isEmpty()) {
-            emit createLobbyRequest(nickname);
-        }
+        emit createLobbyRequest();
     }
 
     // type:joinLobbyRequest;payLoad:1234
     else if (type == "joinLobbyRequest") {
         newLobbyID = getMessageData(message, "payLoad");
-        nickname = getMessageData(message, "nickname");
 
-        if (!newLobbyID.isEmpty() && !nickname.isEmpty()) {
-            emit joinLobbyRequest(newLobbyID, nickname);
+        if (!newLobbyID.isEmpty()) {
+            emit joinLobbyRequest(newLobbyID);
         }
     }
 
