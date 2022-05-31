@@ -1,7 +1,7 @@
 #include "nicknameinputdialog.h"
 
-NicknameInputDialog::NicknameInputDialog(QWidget *parent)
-    : QDialog{parent}, nickname("") {
+NicknameInputDialog::NicknameInputDialog(QString text, QWidget *parent)
+    : QDialog{parent}, nickname(text), accepted(false) {
     // Window proprieties
     this->setFixedSize(400, 175);
     this->setStyleSheet("QDialog {"
@@ -17,7 +17,13 @@ NicknameInputDialog::NicknameInputDialog(QWidget *parent)
 
     // Text input
     input = new CustomLineEdit(this);
+
     input->setPlaceholderText("Nickname");
+
+    if (!nickname.isEmpty()) {
+        input->setText(nickname);
+    }
+
     int inputWidth = this->width() - 10, inputHeight = this->height() * 0.08;
     int inputX = 10, inputY = 10;
     input->setGeometry(inputX, inputY, inputWidth, inputHeight);
@@ -30,7 +36,7 @@ NicknameInputDialog::NicknameInputDialog(QWidget *parent)
     input->setMaxLength(12);
 
     // ButtonBox
-    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Close);
     buttonBox->setStyleSheet("* {"
                                "background-color: white; "
                                "border-radius: 15px; "
@@ -45,21 +51,24 @@ NicknameInputDialog::NicknameInputDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &NicknameInputDialog::onCloseClicked);
 }
 
+bool NicknameInputDialog::isAccepted() { return accepted; }
+
 QString NicknameInputDialog::getText() { return nickname; }
 
-QString NicknameInputDialog::getNickname(QWidget *parent) {
-    NicknameInputDialog nicknameDialog(parent);
-    QString text;
+QString NicknameInputDialog::getNickname(QString text, QWidget *parent) {
+    NicknameInputDialog nicknameDialog(text, parent);
+    nicknameDialog.exec();
 
-    if (nicknameDialog.exec() == QDialog::Accepted) {
-        text = nicknameDialog.getText();
+    if (nicknameDialog.isAccepted()) {
+        return nicknameDialog.getText();
     }
 
-    return nicknameDialog.getText();
+    return "*CLOSED"; // The input doesn't accept especial characters, so I used * to handle the close button
 }
 
 void NicknameInputDialog::onOkClicked() {
     nickname = input->text();
+    accepted = true;
     this->close();
 }
 

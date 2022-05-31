@@ -19,13 +19,15 @@ class NicknameInputDialog : public QDialog {
 
     // Atributes
     QString nickname;
+    bool accepted;
 
 public:
-    explicit NicknameInputDialog(QWidget *parent = nullptr);
+    explicit NicknameInputDialog(QString text, QWidget *parent = nullptr);
 
+    bool isAccepted();
     QString getText();
 
-    static QString getNickname(QWidget *parent = nullptr);
+    static QString getNickname(QString text = "", QWidget *parent = nullptr);
 
 public slots:
     void onOkClicked();
