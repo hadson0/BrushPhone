@@ -70,7 +70,7 @@ void GameManager::quitLobbyRequest(QString lobbyID, QString clientID) {
     if (lobbyMap.contains(lobbyID)) {
         Lobby *lobby = lobbyMap[lobbyID];
         lobby->removeUser(clientID);
-        clientLobbyMap.erase(clientID);
+        clientLobbyMap.remove(clientID);
     } else {
         // Informs the client that an error has occurred
         webSocketHandler->sendTextMessage("type:error;payLoad:quitError", clientID);
@@ -123,6 +123,8 @@ void GameManager::onReadyListChanged(QString readyUSers, QStringList clientList)
 }
 
 void GameManager::onClientDisconnected(QString clientID) {
-    clientLobbyMap[clientID]->removeUser(clientID);
-    clientLobbyMap.erase(clientID);
+    if (clientLobbyMap.contains(clientID)) { // If the client was in a lobby
+        clientLobbyMap[clientID]->removeUser(clientID); // Exits the lobby
+        clientLobbyMap.remove(clientID);
+    }
 }

@@ -15,13 +15,13 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
-    setWindowTitle("Brush Phone");
+    setWindowTitle("Game Lobby Prototype");
     lobbyScreen = nullptr;
 
     // Maintains window aspect ratio
     QSizePolicy sizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
     sizePolicy.setHeightForWidth(true);
-    setSizePolicy(sizePolicy);   
+    setSizePolicy(sizePolicy);
 
     // Creates a Web Socket Handler
     webSocketHandler = WebSocketHandler::getInstance(this);
@@ -144,12 +144,15 @@ void MainWindow::onBackRequested() {
         gameManager->leaveLobby();
         delete lobbyScreen;
         lobbyScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+        menuScreenStack.top()->show();
+    } else if (SelectionScreen *currentScreen = qobject_cast<SelectionScreen *>(sender())) { // If the current screen is a SelectionScreen
+        Q_UNUSED(currentScreen);
+        this->closeAllScreens();
     } else {
         delete menuScreenStack.top();
         menuScreenStack.pop();
+        menuScreenStack.top()->show();
     }
-
-    menuScreenStack.top()->show();
 }
 
 void MainWindow::onConnectToServerRequest() {

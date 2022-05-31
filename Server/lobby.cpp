@@ -43,6 +43,21 @@ void Lobby::toggleReady(QString clientID) {
 
         emit readyListChanged(getReadyUsersStr(), getClientList());
     }
+    bool isAllReady = true;
+    QMap<QString, User*>::iterator it = userMap.begin();
+    for (; it != userMap.end(); it++) {
+        if (!it.value()->isReady()) {
+            isAllReady = false;
+        }
+    }
+
+    if (isAllReady) {
+        emit allReady();
+        QMap<QString, User*>::iterator it = userMap.begin();
+        for (; it != userMap.end(); it++) {
+            it.value()->toggleReady();
+        }
+    }
 }
 
 // Registers the user if it isn't registered and resets all the ready status
