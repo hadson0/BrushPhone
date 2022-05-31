@@ -6,7 +6,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++17
 
 SOURCES += \
-    Controllers/gamemanager.cpp \
+    Controllers/clientmanager.cpp \
     Controllers/messageprocesshandler.cpp \
     Controllers/websockethandler.cpp \
     UI/Components/backgroundedframe.cpp \
@@ -30,7 +30,7 @@ SOURCES += \
 
 
 HEADERS += \
-    Controllers/gamemanager.h \
+    Controllers/clientmanager.h \
     Controllers/messageprocesshandler.h \
     Controllers/websockethandler.h \
     UI/Components/backgroundedframe.h \
