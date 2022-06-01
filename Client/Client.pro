@@ -10,11 +10,13 @@ SOURCES += \
     Controllers/messageprocesshandler.cpp \
     Controllers/websockethandler.cpp \
     UI/Components/backgroundedframe.cpp \
+    UI/Components/canvas.cpp \
     UI/Components/chatframe.cpp \
     UI/Components/customlabel.cpp \
     UI/Components/customlineedit.cpp \
     UI/Components/custompushbutton.cpp \
     UI/Components/customtextedit.cpp \
+    UI/Components/drawingframe.cpp \
     UI/Components/gamesentenceframe.cpp \
     UI/Components/nicknameinputdialog.cpp \
     UI/Components/timerwidget.cpp \
@@ -34,11 +36,13 @@ HEADERS += \
     Controllers/messageprocesshandler.h \
     Controllers/websockethandler.h \
     UI/Components/backgroundedframe.h \
+    UI/Components/canvas.h \
     UI/Components/chatframe.h \
     UI/Components/customlabel.h \
     UI/Components/customlineedit.h \
     UI/Components/custompushbutton.h \
     UI/Components/customtextedit.h \
+    UI/Components/drawingframe.h \
     UI/Components/gamesentenceframe.h \
     UI/Components/nicknameinputdialog.h \
     UI/Components/timerwidget.h \
