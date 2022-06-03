@@ -45,14 +45,7 @@ void SelectionScreen::resizeEvent(QResizeEvent *event) {
 }
 
 void SelectionScreen::onCreateLobbyCklicked() {
-    QString nickname = "";
-    nickname = NicknameInputDialog::getNickname(this);
-
-    if (!nickname.isEmpty()) {
-        emit sendRequestMessage("type:createLobbyRequest;payload:0;nickname:" + nickname);
-    } else {
-        emit error("blankNick");
-    }
+    emit sendRequestMessage("type:createLobbyRequest;payload:0");
 }
 
 void SelectionScreen::onJoinLobbyButtonClicked() {
