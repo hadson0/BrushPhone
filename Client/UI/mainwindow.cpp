@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(clientManager, &ClientManager::gameStarted, this, &MainWindow::onGameLobbyPhase);
     connect(clientManager, &ClientManager::sentenceRequest, this, &MainWindow::displaySentenceScreen);
     connect(clientManager, &ClientManager::drawingRequest, this, &MainWindow::displayDrawingScreen);
+    connect(clientManager, &ClientManager::displayRound, this, &MainWindow::displayRoundScreen);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -96,8 +97,8 @@ void MainWindow::displaySentenceScreen(QString drawingData) {
     gameScreen->deleteLater();
     gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
 
-    GameSentenceScreen *gameSentenceScreen = new GameSentenceScreen(drawingData, this);
-    connect(gameSentenceScreen, &GameSentenceScreen::sendSentence, clientManager, &ClientManager::sendSentence);
+    SentenceScreen *gameSentenceScreen = new SentenceScreen(drawingData, this);
+    connect(gameSentenceScreen, &SentenceScreen::sendSentence, clientManager, &ClientManager::sendSentence);
     gameScreen = gameSentenceScreen;
 
     if (gameScreen != nullptr) {
@@ -115,9 +116,28 @@ void MainWindow::displayDrawingScreen(QString sentence) {
     gameScreen->deleteLater();
     gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
 
-    GameDrawingScreen *gameDrawingScreen = new GameDrawingScreen(sentence, this);
-    connect(gameDrawingScreen, &GameDrawingScreen::sendDrawing, clientManager, &ClientManager::sendDrawing);
+    DrawingScreen *gameDrawingScreen = new DrawingScreen(sentence, this);
+    connect(gameDrawingScreen, &DrawingScreen::sendDrawing, clientManager, &ClientManager::sendDrawing);
     gameScreen = gameDrawingScreen;
+
+    if (gameScreen != nullptr) {
+        connect(gameScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
+        connect(gameScreen, &Screen::sendRequestMessage, clientManager, &ClientManager::processScreenMessage);
+        connect(gameScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
+        connect(gameScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
+
+        menuScreenStack.top()->hide();
+        gameScreen->show();
+    }
+}
+
+void MainWindow::displayRoundScreen(QString sentence, QString drawingData) {
+    gameScreen->deleteLater();
+    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+
+    RoundScreen *roundDisplayScreen = new RoundScreen(sentence, drawingData, this);
+    connect(roundDisplayScreen, &RoundScreen::nextRound, clientManager, &ClientManager::getRoundRequest);
+    gameScreen = roundDisplayScreen;
 
     if (gameScreen != nullptr) {
         connect(gameScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);

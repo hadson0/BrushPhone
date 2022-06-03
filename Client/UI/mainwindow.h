@@ -17,8 +17,9 @@
 #include "Screens/selectionscreen.h"
 #include "Screens/joinlobbyscreen.h"
 #include "Screens/lobbyscreen.h"
-#include "Screens/gamesentencescreen.h"
-#include "Screens/gamedrawingscreen.h"
+#include "Screens/sentencescreen.h"
+#include "Screens/drawingscreen.h"
+#include "Screens/roundscreen.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -44,6 +45,7 @@ public slots:
     void displayLobbyScreen(QString lobbyID);
     void displaySentenceScreen(QString drawingData);
     void displayDrawingScreen(QString sentence);
+    void displayRoundScreen(QString sentence, QString drawingData);
 
     void onGameLobbyPhase();
 
