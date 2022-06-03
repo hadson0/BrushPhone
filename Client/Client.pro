@@ -1,4 +1,4 @@
-QT += quick websockets
+QT += quick websockets gui
 CONFIG += c++17
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -16,12 +16,14 @@ SOURCES += \
     UI/Components/customlineedit.cpp \
     UI/Components/custompushbutton.cpp \
     UI/Components/customtextedit.cpp \
-    UI/Components/drawingframe.cpp \
+    UI/Components/gamedrawingframe.cpp \
     UI/Components/gamesentenceframe.cpp \
     UI/Components/nicknameinputdialog.cpp \
     UI/Components/timerwidget.cpp \
     UI/Components/userlistviewitem.cpp \
     UI/Components/userlistview.cpp \
+    UI/Screens/gamedrawingscreen.cpp \
+    UI/Screens/gamesentencescreen.cpp \
     UI/Screens/joinlobbyscreen.cpp \
     UI/Screens/lobbyscreen.cpp \
     UI/Screens/screen.cpp \
@@ -42,12 +44,14 @@ HEADERS += \
     UI/Components/customlineedit.h \
     UI/Components/custompushbutton.h \
     UI/Components/customtextedit.h \
-    UI/Components/drawingframe.h \
+    UI/Components/gamedrawingframe.h \
     UI/Components/gamesentenceframe.h \
     UI/Components/nicknameinputdialog.h \
     UI/Components/timerwidget.h \
     UI/Components/userlistviewitem.h \
     UI/Components/userlistview.h \
+    UI/Screens/gamedrawingscreen.h \
+    UI/Screens/gamesentencescreen.h \
     UI/Screens/joinlobbyscreen.h \
     UI/Screens/lobbyscreen.h \
     UI/Screens/screen.h \

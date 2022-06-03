@@ -6,18 +6,20 @@ CONFIG -= app_bundle
 
 
 SOURCES += \
-        gamemanager.cpp \
+        game.cpp \
         lobby.cpp \
         main.cpp \
         messageprocesshandler.cpp \
+        servermanager.cpp \
         user.cpp \
         websockethandler.cpp
         main.cpp \
 
 HEADERS += \
-        gamemanager.h \
+        game.h \
         lobby.h \
         messageprocesshandler.h \
+        servermanager.h \
         user.h \
         websockethandler.h
 
