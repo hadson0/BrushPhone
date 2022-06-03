@@ -2,10 +2,7 @@
 
 LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
     : Screen{parent}, lobbyID(lobbyID) {
-    setPadding(25);
-
-    // LOBBY PHASE
-
+    setPadding(15);
     // User List View
     userListView = new UserListView(this);
     connect(this, &LobbyScreen::userListChanged, userListView, &UserListView::onUserListChanged);
@@ -25,60 +22,16 @@ LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
     readyButton = new CustomPushButton("Ready", this);
     connect(readyButton, &QPushButton::clicked, this, &LobbyScreen::requestToggleReady);
 
-    // Lobby ID Label    
-    lobbyIDLabel = new CustomLabel("Lobby ID: " + lobbyID, this);
-
-    // GAME
-    // SENTENCE PHASE
-
-    // Game sentence frame
-    gameSentenceFrame = new GameSentenceFrame(this);
-
-    // Timer
-    timer = new TimerWidget(60, this);
-    connect(timer, &TimerWidget::isOver, gameSentenceFrame, &GameSentenceFrame::onDoneButtonClicked);
-
-    // DRAWING PHASE
-
-    // PRESENTATION PHASE
-}
-
-void LobbyScreen::setGamePhase(GamePhases phase) {
-    // Hide all
-    for (auto &child : this->children()) {
-        if (QWidget *widget = qobject_cast<QWidget *>(child)) {
-            widget->hide();
-        } else if (QFrame *frame = qobject_cast<QFrame *>(child)) {
-            frame->hide();
-        }
+    // Gambiarra
+    QString display;
+    if (!lobbyID.isEmpty()) {
+        display = "Lobby ID: " + lobbyID;
+    } else {
+        readyButton->hide();
     }
 
-    // Show the phase
-    switch (phase) {
-    case LobbyScreen::GamePhases::LobbyPhase:
-        userListView->show();
-        chatFrame->show();
-        backButton->show();
-        readyButton->show();
-        lobbyIDLabel->show();
-        break;
-
-    case LobbyScreen::GamePhases::SentencePhase:
-        gameSentenceFrame->show();
-        timer->show();
-        break;
-
-    case LobbyScreen::GamePhases::DrawingPhase:
-        break;
-
-    default:
-        userListView->show();
-        chatFrame->show();
-        backButton->show();
-        readyButton->show();
-        lobbyIDLabel->show();
-        break;
-    }
+    // Lobby ID Label
+    lobbyIDLabel = new CustomLabel(display, this);
 }
 
 void LobbyScreen::resizeEvent(QResizeEvent *event) {
