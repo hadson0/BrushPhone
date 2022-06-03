@@ -85,8 +85,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         emit gameStarted();
     }
 
-    // type:describeDrawingd;payLoad:<drawingData>
-    else if (type == "describeDrawingd") {
+    // type:describeDrawing;payLoad:<drawingData>
+    else if (type == "describeDrawing") {
         drawingData = getMessageData(message, "payLoad");
 
         if (!drawingData.isEmpty()) {
