@@ -1,35 +1,34 @@
-#ifndef GAMEMANAGER_H
-#define GAMEMANAGER_H
-
-#include <map>
+#ifndef SERVERMANAGER_H
+#define SERVERMANAGER_H
 
 #include <QObject>
 #include <random>
 #include <QDebug>
+#include <QMap>
 
 #include "websockethandler.h"
 #include "messageprocesshandler.h"
 #include "lobby.h"
 
-class GameManager : public QObject {
+class ClientManager : public QObject {
     Q_OBJECT
 
     QMap<QString, Lobby*> lobbyMap;
-    std::map<QString, Lobby*> clientLobbyMap; // This is a std::map to satisfy the criterion of using a stl structure
+    QMap<QString, Lobby*> clientLobbyMap;
 
     WebSocketHandler *webSocketHandler;
     MessageProcessHandler *messageProcessorHandler;
 
-    GameManager(QObject *parent = nullptr);
+    ClientManager(QObject *parent = nullptr);
 
 public:
-    GameManager(const GameManager &obj) = delete;
-    GameManager(GameManager &&obj) = delete;
-    GameManager operator=(GameManager &obj) = delete;
-    GameManager operator=(GameManager &&obj) = delete;
+    ClientManager(const ClientManager &obj) = delete;
+    ClientManager(ClientManager &&obj) = delete;
+    ClientManager operator=(ClientManager &obj) = delete;
+    ClientManager operator=(ClientManager &&obj) = delete;
 
-    static GameManager& getInstance() {
-        static GameManager instance;
+    static ClientManager& getInstance() {
+        static ClientManager instance;
         return instance;
     }
 
@@ -37,13 +36,24 @@ public:
 
 public slots:
     void createLobbyRequest(QString clientID, QString nickname);
-    void joinLobbyRequest(QString lobbyID, QString clientID, QString nickname);
+    void joinLobbyRequest(QString lobbyID, QString clientID, QString nickname);    
     void quitLobbyRequest(QString lobbyID, QString clientID);
-    void messageLobbyRequest(QString message, QString lobbyID, QString senderID);
+    void lobbyMessageRequest(QString message, QString lobbyID, QString senderID);
     void toggleReadyRequest(QString lobbyID, QString clintID);
+
     void onUserListChanged(QString users, QStringList clientList);
     void onReadyListChanged(QString readyUSers, QStringList clientList);
+
+    void onGameStarted(QStringList clientList);
+    void onSentenceRequest(QString clientID, QString drawing);
+    void onDrawingRequest(QString clientID, QString sentence);
+    void onGameEnded(QString users, QStringList clientList);
+
     void onClientDisconnected(QString clientID);
+
+signals:
+    void setDrawingRequest(QString clientID, QString drawing);
+    void setSentenceRequest(QString clientID, QString sentence);
 };
 
-#endif // GAMEMANAGER_H
+#endif // SERVERMANAGER_H

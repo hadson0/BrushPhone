@@ -69,7 +69,7 @@ void WebSocketHandler::onNewSocketConnection() {
 }
 
 void WebSocketHandler::onTextMessageReceived(QString message) {
-     qDebug() << "Server received: " << message;
+    //qDebug() << "Server received: " << message;
     emit newMessageToProcess(message);
 }
 

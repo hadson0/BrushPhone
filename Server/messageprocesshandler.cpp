@@ -4,7 +4,7 @@ MessageProcessHandler::MessageProcessHandler(QObject *parent)
     : QObject{parent} {}
 
 // Extracts the data from the message and returns it
-QString getMessageData(QString message, QString dataIdentifier) {
+QString MessageProcessHandler::getMessageData(QString message, QString dataIdentifier) {
     QRegularExpression separator;
     separator.setPattern(";");
 
@@ -21,7 +21,8 @@ QString getMessageData(QString message, QString dataIdentifier) {
 
 void MessageProcessHandler::processSocketMessage(QString message) {
     QString type = getMessageData(message, "type");
-    QString lobbyID = "", senderID = "", payLoad = "", nickname = "";
+    QString lobbyID, senderID, payLoad, nickname ;
+    QString drawing, sentence;
 
     //type:createGame;payLoad:0000;senderID:1234;nickname:hadson0
     if (type == "createGame") {
@@ -81,6 +82,26 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!lobbyID.isEmpty() && !senderID.isEmpty()) {
             qDebug() << "Client left the lobby, ID: " << senderID;
             emit quitLobbyRequest(lobbyID, senderID);
+        }
+    }
+
+    // type:drawingData;payLoad:<drawingData>;senderID:
+    else if (type == "drawingData") {
+        senderID = getMessageData(message, "senderID");
+        drawing = getMessageData(message, "payLoad");
+
+        if (!drawing.isEmpty() && !senderID.isEmpty()) {
+            emit setDrawingRequest(senderID, drawing);
+        }
+    }
+
+    // type:sentence;payLoad:A blue sky;senderID:
+    else if (type == "sentence") {
+        senderID = getMessageData(message, "senderID");
+        sentence = getMessageData(message, "payLoad");
+
+        if (!sentence.isEmpty() && !senderID.isEmpty()) {
+            emit setSentenceRequest(senderID, sentence);
         }
     }
 }
