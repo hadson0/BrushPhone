@@ -49,13 +49,9 @@ void JoinLobbyScreen::resizeEvent(QResizeEvent *event) {
 }
 
 void JoinLobbyScreen::onJoinButtonClicked() {
-    QString newLobbyID = "", nickname = "";
-    newLobbyID = lobbyIDInput->text();
-    nickname = NicknameInputDialog::getNickname(this);
+    QString newLobbyID = lobbyIDInput->text();
 
-    if (newLobbyID.length() == 4 && !nickname.isEmpty()) {
-        emit sendRequestMessage("type:joinLobbyRequest;payLoad:" + newLobbyID + ";nickname:" + nickname);
-    } else {
-        emit error("joinFieldsError");
+    if (newLobbyID.length() == 4) {
+        emit sendRequestMessage("type:joinLobbyRequest;payLoad:" + newLobbyID);
     }
 }
