@@ -1,8 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <typeinfo>
-
 #include <QDebug>
 #include <QMainWindow>
 #include <QPainter>
@@ -12,22 +10,24 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 
-#include "Controllers/gamemanager.h"
+#include "Controllers/clientmanager.h"
 #include "Controllers/websockethandler.h"
 
 #include "Screens/mainmenuscreen.h"
 #include "Screens/selectionscreen.h"
-#include "Screens/lobbyscreen.h"
 #include "Screens/joinlobbyscreen.h"
+#include "Screens/lobbyscreen.h"
+#include "Screens/gamesentencescreen.h"
+#include "Screens/gamedrawingscreen.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
     // Screens
     QStack<Screen *> menuScreenStack;
-    LobbyScreen *lobbyScreen;
+    Screen *gameScreen;
 
-    GameManager *gameManager;
+    ClientManager *clientManager;
     WebSocketHandler *webSocketHandler;
 
     void closeEvent(QCloseEvent *event);
@@ -35,16 +35,24 @@ class MainWindow : public QMainWindow {
 public:
     MainWindow(QWidget *parent = nullptr);
 
-    void displayMenuScreen(QString targetScreen);
-    void displayLobbyScreen(QString lobbyID);
     void closeAllScreens();
-    void onErrorOccurrence(QString error);
 
 public slots:
+    void displayMenuScreen(QString targetScreen);
+
+    // Display game screens
+    void displayLobbyScreen(QString lobbyID);
+    void displaySentenceScreen(QString drawingData);
+    void displayDrawingScreen(QString sentence);
+
+    void onGameLobbyPhase();
+
     void onBackRequested();
     void onConnectToServerRequest();
     void onClientConnected();
     void onClientDisconnected();
+
+    void onErrorOccurrence(QString error);
 };
 
 #endif // MAINWINDOW_H

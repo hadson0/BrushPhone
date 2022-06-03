@@ -1,22 +1,9 @@
 #include "mainwindow.h"
 
-void MainWindow::closeEvent(QCloseEvent *event) {
-    QMessageBox::StandardButton response = QMessageBox::question( this, "Close Game",
-                                                                    "Are you sure you want to close the game?",
-                                                                    QMessageBox::No | QMessageBox::Yes,
-                                                                    QMessageBox::Yes);
-        if (response != QMessageBox::Yes) {
-            event->ignore();
-        } else {
-            event->accept();
-            webSocketHandler->deleteLater();
-        }
-}
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
     setWindowTitle("Game Lobby Prototype");
-    lobbyScreen = nullptr;
+    gameScreen = nullptr;
 
     // Maintains window aspect ratio
     QSizePolicy sizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
@@ -28,12 +15,29 @@ MainWindow::MainWindow(QWidget *parent)
     connect(webSocketHandler, &WebSocketHandler::connectionError, this, &MainWindow::onClientDisconnected);
 
     // Creates a game manager and connects it to the Web Socket Handler
-    gameManager = GameManager::getInstance(this);
-    connect(webSocketHandler, &WebSocketHandler::newMessageReadyForProcessing, gameManager, &GameManager::processSocketMessage);
-    connect(gameManager, &GameManager::newMessageReadyToSend, webSocketHandler, &WebSocketHandler::sendMessageToServer);
-    connect(gameManager, &GameManager::lobbyIDChanged, this, &MainWindow::displayLobbyScreen);
-    connect(gameManager, &GameManager::clientConnected, this, &MainWindow::onClientConnected);
-    connect(gameManager, &GameManager::error, this, &MainWindow::onErrorOccurrence);
+    clientManager = ClientManager::getInstance(this);
+    connect(webSocketHandler, &WebSocketHandler::newMessageReadyForProcessing, clientManager, &ClientManager::processSocketMessage);
+    connect(clientManager, &ClientManager::newMessageReadyToSend, webSocketHandler, &WebSocketHandler::sendMessageToServer);
+    connect(clientManager, &ClientManager::clientConnected, this, &MainWindow::onClientConnected);
+    connect(clientManager, &ClientManager::error, this, &MainWindow::onErrorOccurrence);
+    connect(clientManager, &ClientManager::lobbyLeft, this, &MainWindow::onBackRequested);
+
+    connect(clientManager, &ClientManager::lobbyJoined, this, &MainWindow::displayLobbyScreen);
+    connect(clientManager, &ClientManager::gameStarted, this, &MainWindow::onGameLobbyPhase);
+    connect(clientManager, &ClientManager::sentenceRequest, this, &MainWindow::displaySentenceScreen);
+    connect(clientManager, &ClientManager::drawingRequest, this, &MainWindow::displayDrawingScreen);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    QMessageBox::StandardButton response = QMessageBox::question( this, "Close Game",
+                                                                    "Are you sure you want to close the game?",
+                                                                    QMessageBox::No | QMessageBox::Yes,
+                                                                    QMessageBox::Yes);
+        if (response != QMessageBox::Yes) {
+            event->ignore();
+        } else {
+            event->accept();
+        }
 }
 
 // Hides the old screen and display the one mentioned in the argument
@@ -53,7 +57,7 @@ void MainWindow::displayMenuScreen(QString destinationMenuScreen) {
     if (newScreen != nullptr) {
         connect(newScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
         connect(newScreen, &Screen::quitAppRequest, this, &QApplication::quit);
-        connect(newScreen, &Screen::sendRequestMessage, gameManager, &GameManager::processScreenMessage);
+        connect(newScreen, &Screen::sendRequestMessage, clientManager, &ClientManager::processScreenMessage);
         connect(newScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
         connect(newScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
 
@@ -66,40 +70,116 @@ void MainWindow::displayMenuScreen(QString destinationMenuScreen) {
     }
 }
 
-// Creates the lobby screen and connects it
 void MainWindow::displayLobbyScreen(QString lobbyID) {
-    lobbyScreen = new LobbyScreen(lobbyID, this);
+    gameScreen->deleteLater();
+    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
 
-    connect(lobbyScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
-    connect(lobbyScreen, &Screen::sendRequestMessage, gameManager, &GameManager::processScreenMessage);
-    connect(lobbyScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
-    connect(lobbyScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
+    LobbyScreen *lobbyScreen = new LobbyScreen(lobbyID, this);
+    connect(clientManager, &ClientManager::userListChanged, lobbyScreen, &LobbyScreen::userListChanged);
+    connect(clientManager, &ClientManager::readyListChanged, lobbyScreen, &LobbyScreen::readyListChanged);
+    connect(clientManager, &ClientManager::newLobbyMessageRecieved, lobbyScreen, &LobbyScreen::newMessageRecieved);
+    gameScreen = lobbyScreen;
 
-    connect(gameManager, &GameManager::newLobbyMessageRecieved, lobbyScreen, &LobbyScreen::newMessageRecieved);
-    connect(gameManager, &GameManager::userListChanged, lobbyScreen, &LobbyScreen::userListChanged);
-    connect(gameManager, &GameManager::readyListChanged, lobbyScreen, &LobbyScreen::readyListChanged);
-    connect(gameManager, &GameManager::lobbyLeft, this, &MainWindow::onBackRequested);
 
-    menuScreenStack.top()->hide();
-    lobbyScreen->show();
+    if (gameScreen != nullptr) {
+        connect(gameScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
+        connect(gameScreen, &Screen::sendRequestMessage, clientManager, &ClientManager::processScreenMessage);
+        connect(gameScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
+        connect(gameScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
+
+        menuScreenStack.top()->hide();
+        gameScreen->show();
+    }
 }
+
+void MainWindow::displaySentenceScreen(QString drawingData) {
+    gameScreen->deleteLater();
+    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+
+    GameSentenceScreen *gameSentenceScreen = new GameSentenceScreen(drawingData, this);
+    connect(gameSentenceScreen, &GameSentenceScreen::sendSentence, clientManager, &ClientManager::sendSentence);
+    gameScreen = gameSentenceScreen;
+
+    if (gameScreen != nullptr) {
+        connect(gameScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
+        connect(gameScreen, &Screen::sendRequestMessage, clientManager, &ClientManager::processScreenMessage);
+        connect(gameScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
+        connect(gameScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
+
+        menuScreenStack.top()->hide();
+        gameScreen->show();
+    }
+}
+
+void MainWindow::displayDrawingScreen(QString sentence) {
+    gameScreen->deleteLater();
+    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+
+    GameDrawingScreen *gameDrawingScreen = new GameDrawingScreen(sentence, this);
+    connect(gameDrawingScreen, &GameDrawingScreen::sendDrawing, clientManager, &ClientManager::sendDrawing);
+    gameScreen = gameDrawingScreen;
+
+    if (gameScreen != nullptr) {
+        connect(gameScreen, &Screen::backRequest, this, &MainWindow::onBackRequested);
+        connect(gameScreen, &Screen::sendRequestMessage, clientManager, &ClientManager::processScreenMessage);
+        connect(gameScreen, &Screen::menuScreenDisplayRequest, this, &MainWindow::displayMenuScreen);
+        connect(gameScreen, &Screen::error, this, &MainWindow::onErrorOccurrence);
+
+        menuScreenStack.top()->hide();
+        gameScreen->show();
+    }
+}
+
+void MainWindow::onGameLobbyPhase() {
+    displaySentenceScreen("");
+}
+
 
 void MainWindow::closeAllScreens() {
     // If the lobby screen is open, closes it
-    if (lobbyScreen != nullptr) {
-        gameManager->leaveLobby();
-        lobbyScreen->deleteLater();
-        lobbyScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    if (gameScreen != nullptr) {
+        clientManager->leaveLobby();
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
     }
 
     // Closes all screens
     while (!menuScreenStack.isEmpty()) {
-        delete menuScreenStack.top();
+        menuScreenStack.top()->deleteLater();
         menuScreenStack.pop();
     }
 
     webSocketHandler->close();
     this->displayMenuScreen("MainMenuScreen");
+}
+
+// Goes to the previous screen
+void MainWindow::onBackRequested() {
+    // Deletes the current screen
+    if (gameScreen != nullptr) { // If the current screen is the lobby screen
+        clientManager->leaveLobby();
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+        menuScreenStack.top()->show();
+    } else if (qobject_cast<SelectionScreen *>(sender())) { // If the current screen is a SelectionScreen
+        this->closeAllScreens();
+    } else {
+        delete menuScreenStack.top();
+        menuScreenStack.pop();
+        menuScreenStack.top()->show();
+    }
+}
+
+void MainWindow::onConnectToServerRequest() {
+    webSocketHandler->connectToServer("ws://127.0.0.1:8585");
+}
+
+void MainWindow::onClientConnected() {
+    displayMenuScreen("SelectionScreen");
+}
+
+void MainWindow::onClientDisconnected() {
+    this->onErrorOccurrence("connectionError");
 }
 
 void MainWindow::onErrorOccurrence(QString errorCode) {
@@ -112,7 +192,7 @@ void MainWindow::onErrorOccurrence(QString errorCode) {
         QMessageBox::warning(this, "Error", "An error occurred while trying to send a message to the lobby");
     }
 
-    else if (errorCode == "blankNick") {
+    else if (errorCode == "blankNickError") {
         QMessageBox::warning(this, "Error", "Nickname field cannot be left blank.");
     }
 
@@ -137,32 +217,3 @@ void MainWindow::onErrorOccurrence(QString errorCode) {
     }
 }
 
-// Goes to the previous screen
-void MainWindow::onBackRequested() {
-    // Deletes the current screen
-    if (lobbyScreen != nullptr) { // If the current screen is the lobby screen
-        gameManager->leaveLobby();
-        delete lobbyScreen;
-        lobbyScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
-        menuScreenStack.top()->show();
-    } else if (SelectionScreen *currentScreen = qobject_cast<SelectionScreen *>(sender())) { // If the current screen is a SelectionScreen
-        Q_UNUSED(currentScreen);
-        this->closeAllScreens();
-    } else {
-        delete menuScreenStack.top();
-        menuScreenStack.pop();
-        menuScreenStack.top()->show();
-    }
-}
-
-void MainWindow::onConnectToServerRequest() {
-    webSocketHandler->connectToServer("ws://127.0.0.1:8585");
-}
-
-void MainWindow::onClientConnected() {
-    displayMenuScreen("SelectionScreen");
-}
-
-void MainWindow::onClientDisconnected() {
-    this->onErrorOccurrence("connectionError");
-}
