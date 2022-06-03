@@ -28,6 +28,7 @@ signals:
     void gameStarted();
     void getSentence(QString drawingData);
     void getDrawing(QString sentence);
+    void displayRound(QString sentence, QString drawingData);
     void gameEnded(QStringList userList);
 
     // Screen related signals

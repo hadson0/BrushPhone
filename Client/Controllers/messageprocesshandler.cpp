@@ -103,8 +103,19 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         }
     }
 
-    // type:gameEnded;payLoad:0;userList:hadson0,whoam1
-    else if (type == "gameEnded") {
+    // type:displayRound;sentence:abc;drawingData:<drawingData>
+    else if (type == "displayRound") {
+        sentence = getMessageData(message, "sentence");
+        drawingData = getMessageData(message, "drawingData");
+
+        if (!sentence.isEmpty() && !drawingData.isEmpty()) {
+            qDebug() << "Users in lobby: " << userList;
+            emit displayRound(sentence, drawingData);
+        }
+    }
+
+    // type:finalLobby;payLoad:0;userList:hadson0,whoam1
+    else if (type == "finalLobby") {
         userList = getMessageData(message, "userList").split(separator);
 
         if (!userList.isEmpty()) {

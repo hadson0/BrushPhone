@@ -10,7 +10,7 @@
 #include <QTemporaryFile>
 
 #include "Controllers/messageprocesshandler.h"
-#include "UI/Components/nicknameinputdialog.h"
+#include "UI/Components/nickinputdialog.h"
 
 class ClientManager : public QObject {
     Q_OBJECT
@@ -65,6 +65,8 @@ public slots:
     void sendDrawing(QString drawingData);
     void sendSentence(QString sentence);
 
+    void getRoundRequest();
+
 signals:
     void processSocketMessage(QString message);
     void processScreenMessage(QString message);
@@ -83,6 +85,7 @@ signals:
     void gameStarted();
     void sentenceRequest(QString drawingData);
     void drawingRequest(QString sentence);
+    void displayRound(QString sentence, QString drawinData);
 
     void error(QString error);    
 };

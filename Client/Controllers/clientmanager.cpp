@@ -19,6 +19,7 @@ ClientManager::ClientManager(QObject *parent)
     connect(messageProcessHandler, &MessageProcessHandler::getSentence, this, &ClientManager::sentenceRequest);
     connect(messageProcessHandler, &MessageProcessHandler::getDrawing, this, &ClientManager::drawingRequest);
     connect(messageProcessHandler, &MessageProcessHandler::gameEnded, this, &ClientManager::onGameEnded);
+    connect(messageProcessHandler, &MessageProcessHandler::displayRound, this, &ClientManager::displayRound);
 
     // Screen related message process handler connections
     connect(this, &ClientManager::processScreenMessage, messageProcessHandler, &MessageProcessHandler::processScreenMessage);
@@ -86,7 +87,7 @@ void ClientManager::toggleReadyRequest() {
 }
 
 void ClientManager::createLobbyRequest() {
-    QString newNickname = NicknameInputDialog::getNickname(nickname);
+    QString newNickname = NickInputDialog::getNickname(nickname);
 
     if (newNickname.isEmpty()) {
         emit error("blankNickError");
@@ -101,7 +102,7 @@ void ClientManager::createLobbyRequest() {
 }
 
 void ClientManager::joinLobbyRequested(QString targetLobbyID) {
-    QString newNickname = NicknameInputDialog::getNickname(nickname);
+    QString newNickname = NickInputDialog::getNickname(nickname);
 
     if (newNickname.isEmpty()) {
         emit error("blankNickError");
@@ -143,4 +144,8 @@ void ClientManager::sendDrawing(QString drawingData) {
 
 void ClientManager::sendSentence(QString sentence) {
     emit newMessageReadyToSend("type:sentence;payLoad:" + sentence + ";senderID:" + clientID);
+}
+
+void ClientManager::getRoundRequest() {
+    emit newMessageReadyToSend("type:getRound;payLoad:0;senderID:" + clientID);
 }
