@@ -16,8 +16,12 @@ class Lobby : public QObject {
 
     QString lobbyID;
     QMap<QString, User *> userMap; // <clientID, User>
+
     bool isGameOn;
     Game *game;
+
+    int storyIndex, roundIndex;
+    void getNextIndex(int &x);
 
 public:
     explicit Lobby(QString lobbyID, QObject *parent);
@@ -29,8 +33,6 @@ public:
     QStringList getUsers();
     QString getUsersToStr();
     QString getReadyUsersStr();
-
-    Round getGameRound();
 
     // Setters
     void toggleReady(QString clientID);    
@@ -44,7 +46,7 @@ public slots:
     void onGameStarted();
     void onGameSentencePhase();
     void onGameDrawingPhase();
-    void onGameEnded();
+    void getGameRound();
 
     void setDrawingRequest(QString clientID, QString drawing);
     void setSentenceRequest(QString clientID, QString sentence);
@@ -61,10 +63,11 @@ signals:
     void sentenceRequest(QString clientID, QString drawing);
     void drawingRequest(QString clientID, QString sentence);
 
-    void gameEnded(QString users, QStringList clientList);
-
     void setSentence(QString userNick, QString sentence);
-    void setDrawing(QString userNick, QString drawing);
+    void setDrawing(QString userNick, QString drawingData);
+
+    void displayRoundRequest(QString sentence, QString drawing, QStringList clientList);
+    void finalLobby(QString userList, QStringList clientList);
 };
 
 #endif // LOBBY_H

@@ -47,13 +47,15 @@ public slots:
     void onGameStarted(QStringList clientList);
     void onSentenceRequest(QString clientID, QString drawing);
     void onDrawingRequest(QString clientID, QString sentence);
-    void onGameEnded(QString users, QStringList clientList);
+    void onDisplayRoundRequest(QString sentence, QString drawing, QStringList clientList);
+    void onFinalLobby(QString users, QStringList clientList);
 
     void onClientDisconnected(QString clientID);
 
 signals:
     void setDrawingRequest(QString clientID, QString drawing);
     void setSentenceRequest(QString clientID, QString sentence);
+    void getRoundRequest(QString clientID);
 };
 
 #endif // SERVERMANAGER_H

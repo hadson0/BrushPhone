@@ -3,21 +3,12 @@
 Game::Game(QObject *parent)
     : QObject{parent}, gamePhase(0) {}
 
-// Gets the next round index, in cycles
-int Game::getNextIndex(int x) {
-    if (x == roundMap.size() - 1) {
-        x = 0;
-    } else {
-        x++;
-    }
-    return x;
-}
-
 void Game::startGame(QStringList userList) {
+    int numbUsers = userList.size();
     gamePhase = 0;
-    stories.resize(userList.size());
-    for (qsizetype i = 0; i < stories.size(); i++) {
-        stories[i].resize(3);
+    stories.resize(numbUsers);
+    for (qsizetype i = 0; i < numbUsers; i++) {
+        stories[i].resize(numbUsers / 2);
         stories[i].fill({"", ""}); // Clears the vector
     }
 
@@ -36,7 +27,11 @@ void Game::advancePhase() {
         emit ended();
     } else {
         for (auto it = roundMap.begin(); it != roundMap.end(); it++) {
-            it.value() = getNextIndex(it.value());
+            if (it.value() == roundMap.size() - 1) {
+                it.value() = 0;
+            } else {
+                it.value()++;
+            }
         }
 
         if (gamePhase % 2 == 0) {
@@ -95,6 +90,7 @@ void Game::setSentence(QString userNick, QString sentence) {
         }
     }
 }
+
 // Sets the drawing in the stories
 void Game::setDrawing(QString userNick, QString drawingData) {
     if (gamePhase % 2 != 0) {

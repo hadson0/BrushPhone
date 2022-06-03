@@ -1,12 +1,21 @@
 #include "lobby.h"
 
 Lobby::Lobby(QString lobbyID, QObject *parent)
-    : QObject{parent} , lobbyID(lobbyID), isGameOn(false), game(nullptr) {}
+    : QObject{parent} , lobbyID(lobbyID), isGameOn(false), game(nullptr), storyIndex(0), roundIndex(0) {}
 
 QString Lobby::getID() { return lobbyID; }
 
 // Returns a QStringList containing all the usersIDs
 QStringList Lobby::getClientList() { return userMap.keys(); }
+
+// Gets the next round index, in cycles
+void Lobby::getNextIndex(int &x) {
+    if (x == (userMap.size() / 2) - 1) {
+        x = 0;
+    } else {
+        x++;
+    }
+}
 
 QString Lobby::getUserNick(QString clientID) { return userMap[clientID]->getNickname(); }
 
@@ -46,17 +55,6 @@ QString Lobby::getReadyUsersStr() {
     readyUserList.chop(1);
 
     return readyUserList;
-}
-
-Round Lobby::getGameRound() {
-    static int storyIndex = 0, roundIndex = 0;
-
-    if (roundIndex == 5) {
-        roundIndex = 0;
-        storyIndex++;
-    }
-
-    return game->getRound(storyIndex, roundIndex);
 }
 
 void Lobby::toggleReady(QString clientID) {
@@ -147,8 +145,18 @@ void Lobby::onGameDrawingPhase() {
     }
 }
 
-void Lobby::onGameEnded() {
-    emit gameEnded(this->getUsersToStr(), this->getClientList());
+void Lobby::getGameRound() {
+    if (storyIndex < userMap.size()) {
+        Round round = game->getRound(storyIndex, roundIndex);
+        emit displayRoundRequest(round.first, round.second, this->getClientList());
+    } else {
+        emit finalLobby(this->getUsersToStr(), this->getClientList());
+    }
+    getNextIndex(roundIndex);
+
+    if (roundIndex == 0) {
+        storyIndex ++;
+    }
 }
 
 void Lobby::setDrawingRequest(QString clientID, QString drawing) {
@@ -169,7 +177,7 @@ void Lobby::createGame() {
         connect(game, &Game::started, this, &Lobby::onGameStarted);
         connect(game, &Game::sentencePhase, this, &Lobby::onGameSentencePhase);
         connect(game, &Game::drawingPhase, this, &Lobby::onGameDrawingPhase);
-        connect(game, &Game::ended, this, &Lobby::onGameEnded);
+        connect(game, &Game::ended, this, &Lobby::getGameRound);
 
         game->startGame(this->getUsers());
 

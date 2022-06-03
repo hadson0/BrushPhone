@@ -104,4 +104,13 @@ void MessageProcessHandler::processSocketMessage(QString message) {
             emit setSentenceRequest(senderID, sentence);
         }
     }
+
+    // type:getRound;payLoad:0;senderID:1234
+    else if (type == "getRound") {
+        senderID = getMessageData(message, "senderID");
+
+        if (!senderID.isEmpty()) {
+            emit getRoundRequest(senderID);
+        }
+    }
 }

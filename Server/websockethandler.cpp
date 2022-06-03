@@ -35,7 +35,7 @@ void WebSocketHandler::sendTextMessage(QString message, QString clientID) {
     if (clientMap.contains(clientID)) {
         QWebSocket *client = clientMap[clientID];
         client->sendTextMessage(message);
-         qDebug() << "Send message:" << message;
+         // qDebug() << "Send message:" << message;
     }
 }
 

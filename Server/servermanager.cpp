@@ -17,6 +17,8 @@ ClientManager::ClientManager(QObject *parent)
 
     connect(messageProcessorHandler, &MessageProcessHandler::setDrawingRequest, this, &ClientManager::setDrawingRequest);
     connect(messageProcessorHandler, &MessageProcessHandler::setSentenceRequest, this, &ClientManager::setSentenceRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::getRoundRequest, this, &ClientManager::getRoundRequest);
+
 }
 
 // Generates a QString composed of 4 random numbers. Ex.: "1234"
@@ -42,10 +44,12 @@ void ClientManager::createLobbyRequest(QString clientID, QString nickname) {
     connect(newLobby, &Lobby::gameStarted, this, &ClientManager::onGameStarted);
     connect(newLobby, &Lobby::drawingRequest, this, &ClientManager::onDrawingRequest);
     connect(newLobby, &Lobby::sentenceRequest, this, &ClientManager::onSentenceRequest);
-    connect(newLobby, &Lobby::gameEnded, this, &ClientManager::onGameEnded);
+    connect(newLobby, &Lobby::displayRoundRequest, this, &ClientManager::onDisplayRoundRequest);
+    connect(newLobby, &Lobby::finalLobby, this, &ClientManager::onFinalLobby);
 
     connect(this, &ClientManager::setDrawingRequest, newLobby, &Lobby::setDrawingRequest);
     connect(this, &ClientManager::setSentenceRequest, newLobby, &Lobby::setSentenceRequest);
+    connect(this, &ClientManager::getRoundRequest, newLobby, &Lobby::getGameRound);
 
     newLobby->addUser(clientID, nickname);
     lobbyMap[newLobbyID] = newLobby;
@@ -148,9 +152,14 @@ void ClientManager::onDrawingRequest(QString clientID, QString sentence) {
     webSocketHandler->sendTextMessage("type:drawSentence;payLoad:" + sentence, clientID);
 }
 
-void ClientManager::onGameEnded(QString userList, QStringList clientList) {
-    // Informs all clients that the game ended
-    webSocketHandler->sendTextMessage("type:gameEnded;payLoad:0;userList:" + userList, clientList);
+void ClientManager::onDisplayRoundRequest(QString sentence, QString drawingData, QStringList clientList) {
+    // Informs all clients to display the round
+    webSocketHandler->sendTextMessage("type:displayRound;sentence:" + sentence + ";drawingData:" + drawingData, clientList);
+}
+
+void ClientManager::onFinalLobby(QString userList, QStringList clientList) {
+    // Informs all clients to display the final lobby
+    webSocketHandler->sendTextMessage("type:finalLobby;payLoad:0;userList:" + userList, clientList);
 }
 
 void ClientManager::onClientDisconnected(QString clientID) {

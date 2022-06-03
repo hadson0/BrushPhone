@@ -25,6 +25,8 @@ signals:
 
     void setDrawingRequest(QString clientID, QString drawing);
     void setSentenceRequest(QString clientID, QString sentence);
+
+    void getRoundRequest(QString clientID);
 };
 
 #endif // MESSAGEPROCESSHANDLER_H

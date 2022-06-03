@@ -17,8 +17,6 @@ class Game : public QObject {
     QVector<Story> stories;
     QMap<QString, int> roundMap; // <userNick, storyIndex>
 
-    int getNextIndex(int x);
-
 public:
     explicit Game(QObject *parent = nullptr);
 
