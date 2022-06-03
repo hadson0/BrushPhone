@@ -39,7 +39,7 @@ ClientManager::~ClientManager() {
 }
 
 void ClientManager::readNickname() {
-    QFile file("nickname_"+ clientID + ".txt");
+    QFile file("nickname.txt");
 
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
@@ -52,7 +52,7 @@ void ClientManager::readNickname() {
 }
 
 void ClientManager::writeNickname() {
-    QFile file("nickname_"+ clientID + ".txt");
+    QFile file("nickname.txt");
     if(file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
         out << nickname;
