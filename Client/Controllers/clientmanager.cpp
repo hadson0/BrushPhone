@@ -3,16 +3,22 @@
 ClientManager *ClientManager::instance = nullptr;
 
 ClientManager::ClientManager(QObject *parent)
-    : QObject{parent}, clientID(""), lobbyID("") {
+    : QObject{parent}, clientID(""), lobbyID(""), nickname("") {
     messageProcessHandler = new MessageProcessHandler(this);
 
     // Socket related message process handler connections
     connect(this, &ClientManager::processSocketMessage, messageProcessHandler, &MessageProcessHandler::processSocketMessage);
     connect(messageProcessHandler, &MessageProcessHandler::setClientID, this, &ClientManager::setClientID);
     connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &ClientManager::onLobbyJoined);
+
     connect(messageProcessHandler, &MessageProcessHandler::userListUpdated, this, &ClientManager::userListChanged);
     connect(messageProcessHandler, &MessageProcessHandler::readyListUpdated, this, &ClientManager::readyListChanged);
     connect(messageProcessHandler, &MessageProcessHandler::newLobbyMessageRecieved, this, &ClientManager::newLobbyMessageRecieved);
+
+    connect(messageProcessHandler, &MessageProcessHandler::gameStarted, this, &ClientManager::gameStarted);
+    connect(messageProcessHandler, &MessageProcessHandler::getSentence, this, &ClientManager::sentenceRequest);
+    connect(messageProcessHandler, &MessageProcessHandler::getDrawing, this, &ClientManager::drawingRequest);
+    connect(messageProcessHandler, &MessageProcessHandler::gameEnded, this, &ClientManager::onGameEnded);
 
     // Screen related message process handler connections
     connect(this, &ClientManager::processScreenMessage, messageProcessHandler, &MessageProcessHandler::processScreenMessage);
@@ -32,9 +38,8 @@ ClientManager::~ClientManager() {
     writeNickname();
 }
 
-
 void ClientManager::readNickname() {
-    QFile file("nickname.txt");
+    QFile file("nickname_"+ clientID + ".txt");
 
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
@@ -47,7 +52,7 @@ void ClientManager::readNickname() {
 }
 
 void ClientManager::writeNickname() {
-    QFile file("nickname.txt");
+    QFile file("nickname_"+ clientID + ".txt");
     if(file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
         out << nickname;
@@ -57,7 +62,6 @@ void ClientManager::writeNickname() {
 }
 
 QString ClientManager::getLobbyID() { return lobbyID; }
-
 
 void ClientManager::setClientID(QString clientID) {
     this->clientID = clientID;
@@ -72,7 +76,7 @@ void ClientManager::setLobbyID(QString newLobbyID) {
         if (lobbyID.isEmpty()) {
             emit lobbyLeft();
         } else {
-            emit lobbyIDChanged(newLobbyID);
+            emit lobbyJoined(newLobbyID);
         }
     }
 }
@@ -83,8 +87,6 @@ void ClientManager::toggleReadyRequest() {
 
 void ClientManager::createLobbyRequest() {
     QString newNickname = NicknameInputDialog::getNickname(nickname);
-
-    qDebug() << nickname << " " << newNickname;
 
     if (newNickname.isEmpty()) {
         emit error("blankNickError");
@@ -124,9 +126,21 @@ void ClientManager::quitLobbyRequest() {
 void ClientManager::onLobbyJoined(QString lobbyID, QStringList newUserList) {
     setLobbyID(lobbyID);
     emit userListChanged(newUserList);
-    emit joinedLobby();
 }
 
 void ClientManager::leaveLobby() {
     lobbyID = "";
+}
+
+void ClientManager::onGameEnded(QStringList userList) {
+    emit lobbyJoined("");
+    emit userListChanged(userList);
+}
+
+void ClientManager::sendDrawing(QString drawingData) {
+    emit newMessageReadyToSend("type:drawingData;payLoad:" + drawingData + ";senderID:" + clientID);
+}
+
+void ClientManager::sendSentence(QString sentence) {
+    emit newMessageReadyToSend("type:sentence;payLoad:" + sentence + ";senderID:" + clientID);
 }

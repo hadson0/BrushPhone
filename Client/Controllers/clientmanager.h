@@ -6,6 +6,8 @@
 #include <QString>
 #include <QDebug>
 #include <QTextStream>
+#include <QFile>
+#include <QTemporaryFile>
 
 #include "Controllers/messageprocesshandler.h"
 #include "UI/Components/nicknameinputdialog.h"
@@ -48,13 +50,20 @@ public slots:
     void setLobbyID(QString lobbyID);
 
     // Methods   
-    void toggleReadyRequest();
-    void createLobbyRequest();
+    void createLobbyRequest();    
     void joinLobbyRequested(QString lobbyID);
     void quitLobbyRequest();
+
+    void toggleReadyRequest();
     void sendLobbyMessageRequested(QString message);
+
     void onLobbyJoined(QString lobbyID, QStringList userList);
     void leaveLobby();
+
+    void onGameEnded(QStringList userList);
+
+    void sendDrawing(QString drawingData);
+    void sendSentence(QString sentence);
 
 signals:
     void processSocketMessage(QString message);
@@ -62,14 +71,18 @@ signals:
 
     void connectToServerRequest();
     void clientConnected();
-    void userListChanged(QStringList newUserList);
-    void readyListChanged(QStringList readyUsers);
-    void lobbyIDChanged(QString newLobbyID);
+
+    void lobbyJoined(QString newLobbyID);
     void lobbyLeft();
+    void userListChanged(QStringList newUserList);
+    void readyListChanged(QStringList readyUsers);    
 
     void newLobbyMessageRecieved(QString message, QString senderNick);
     void newMessageReadyToSend(QString message);
-    void joinedLobby();
+
+    void gameStarted();
+    void sentenceRequest(QString drawingData);
+    void drawingRequest(QString sentence);
 
     void error(QString error);    
 };

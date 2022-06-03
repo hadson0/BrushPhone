@@ -25,7 +25,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
     static QRegularExpression separator(",");
 
     QString type = getMessageData(message, "type");
-    QString clientID = "", lobbyID = "", senderNick = "", lobbyMessage = "", errorCode = "";
+    QString clientID, lobbyID, senderNick, lobbyMessage , errorCode;
+    QString sentence, drawingData;
     QStringList userList;
 
     // type:uniqueId;payLoad:1234
@@ -79,8 +80,40 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         }
     }
 
-    // Errors
+    // type:gameStarted;payLoad:0
+    else if (type == "gameStarted") {
+        emit gameStarted();
+    }
 
+    // type:describeDrawingd;payLoad:<drawingData>
+    else if (type == "describeDrawingd") {
+        drawingData = getMessageData(message, "payLoad");
+
+        if (!drawingData.isEmpty()) {
+            emit getSentence(drawingData);
+        }
+    }
+
+    // type:drawSentence;payLoad:A blue sky
+    else if (type == "drawSentence") {
+        sentence = getMessageData(message, "payLoad");
+
+        if (!sentence.isEmpty()) {
+            emit getDrawing(sentence);
+        }
+    }
+
+    // type:gameEnded;payLoad:0;userList:hadson0,whoam1
+    else if (type == "gameEnded") {
+        userList = getMessageData(message, "userList").split(separator);
+
+        if (!userList.isEmpty()) {
+            qDebug() << "Users in lobby: " << userList;
+            emit gameEnded(userList);
+        }
+    }
+
+    // Errors
     // type:joinError;payLoad:DNE
     else if (type == "error") {
         errorCode = getMessageData(message, "payLoad");
@@ -92,12 +125,11 @@ void MessageProcessHandler::processSocketMessage(QString message) {
 
 void MessageProcessHandler::processScreenMessage(QString message) {
     QString type = getMessageData(message, "type");
-    QString nickname = "", newLobbyID = "", lobbyMessage = "";
+    QString newLobbyID, lobbyMessage;
 
     // type:connectToServerRequest;payLoad:0
     if (type == "connectToServerRequest") {
             emit connectToServerRequest();
-
     }
 
     // type:createLobbyRequest;payload:0

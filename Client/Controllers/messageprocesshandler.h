@@ -7,6 +7,7 @@
 
 class MessageProcessHandler : public QObject {
     Q_OBJECT
+
 public:
     explicit MessageProcessHandler(QObject *parent = nullptr);
 
@@ -21,8 +22,13 @@ signals:
     void setClientID(QString clientID);
     void newLobby(QString newLobbyID, QStringList newUSerList);
     void userListUpdated(QStringList newUSerList);
-    void newLobbyMessageRecieved(QString message, QString senderNick);
     void readyListUpdated(QStringList newReadyList);
+    void newLobbyMessageRecieved(QString message, QString senderNick);
+
+    void gameStarted();
+    void getSentence(QString drawingData);
+    void getDrawing(QString sentence);
+    void gameEnded(QStringList userList);
 
     // Screen related signals
     void connectToServerRequest();
