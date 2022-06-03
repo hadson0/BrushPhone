@@ -10,6 +10,10 @@ TimerWidget::TimerWidget(int seconds, QWidget *parent)
     // Timer
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &TimerWidget::updateTimer);
+}
+
+void TimerWidget::start() {
+    timer->stop();
     timer->start(1000);
 }
 

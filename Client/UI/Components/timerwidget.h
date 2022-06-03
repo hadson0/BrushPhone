@@ -20,6 +20,8 @@ class TimerWidget : public BackgroundedFrame {
 public:
     explicit TimerWidget(int seconds, QWidget *parent = nullptr);
 
+    void start();
+
 public slots:
     void updateTimer();
 
