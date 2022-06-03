@@ -2,13 +2,14 @@
 #define SCREEN_H
 
 #include <QFrame>
-#include <QGuiApplication>
 
 class Screen : public QFrame {
     Q_OBJECT
 
     QSize avaliableSize;
     int padding, spacing;
+
+    virtual void resizeEvent(QResizeEvent *event) = 0; // Force method implementation
 
 public:
     Screen(QWidget *parent);
@@ -17,7 +18,6 @@ public:
     // Getters
     int getAvaliableWidth();
     int getAvaliableHeight();
-    int getBorderRadius();
     int getPadding();
     int getSpacing();
 
