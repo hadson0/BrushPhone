@@ -51,10 +51,9 @@ Round Game::getRound(int storyIndex, int roundIndex) {
 }
 
 QString Game::getSentence(QString userNick) {
-    if (gamePhase % 2 != 0) {
+    if (gamePhase % 2 != 0 && gamePhase != 0) {
         int storyIndex = roundMap[userNick];
-
-        int roundIndex = gamePhase / 2;        
+        int roundIndex = (gamePhase - 1) / 2;
 
         return stories[storyIndex][roundIndex].first;
     }
@@ -63,9 +62,9 @@ QString Game::getSentence(QString userNick) {
 }
 
 QString Game::getDrawing(QString userNick) {
-    if (gamePhase % 2 == 0) {
+    if (gamePhase % 2 == 0 && gamePhase != 0) {
         int storyIndex = roundMap[userNick];
-        int roundIndex = gamePhase / 2;
+        int roundIndex = (gamePhase - 1) / 2;
 
         return stories[storyIndex][roundIndex].second;
     }

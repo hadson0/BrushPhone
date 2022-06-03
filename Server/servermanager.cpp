@@ -140,7 +140,7 @@ void ClientManager::onGameStarted(QStringList clientList) {
 
 void ClientManager::onSentenceRequest(QString clientID, QString drawingData) {
     // Pass a drawing to the client and asks to describe it
-    webSocketHandler->sendTextMessage("type:describeDrawingd;payLoad:" + drawingData, clientID);
+    webSocketHandler->sendTextMessage("type:describeDrawing;payLoad:" + drawingData, clientID);
 }
 
 void ClientManager::onDrawingRequest(QString clientID, QString sentence) {
