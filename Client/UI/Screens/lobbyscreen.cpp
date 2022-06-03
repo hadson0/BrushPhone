@@ -1,8 +1,13 @@
 #include "lobbyscreen.h"
 
 LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
-    : Screen{parent}, lobbyID(lobbyID) {
+    : Screen{parent}, lobbyID(lobbyID), isStartLobby(false) {
     setPadding(15);
+    // Gambiarra
+    if (!lobbyID.isEmpty()) {
+        isStartLobby = true;
+    }
+
     // User List View
     userListView = new UserListView(this);
     connect(this, &LobbyScreen::userListChanged, userListView, &UserListView::onUserListChanged);
@@ -18,20 +23,14 @@ LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
     backButton = new CustomPushButton("Back", this);
     connect(backButton, &QPushButton::clicked, this, &LobbyScreen::onBackButtonClicked);
 
-    // Ready Button
-    readyButton = new CustomPushButton("Ready", this);
-    connect(readyButton, &QPushButton::clicked, this, &LobbyScreen::requestToggleReady);
+    if (isStartLobby) {
+        // Ready Button
+        readyButton = new CustomPushButton("Ready", this);
+        connect(readyButton, &QPushButton::clicked, this, &LobbyScreen::requestToggleReady);
 
-    // Gambiarra
-    QString display;
-    if (!lobbyID.isEmpty()) {
-        display = "Lobby ID: " + lobbyID;
-    } else {
-        readyButton->hide();
+        // Lobby ID Label
+        lobbyIDLabel = new CustomLabel("Lobby ID: " + lobbyID, this);
     }
-
-    // Lobby ID Label
-    lobbyIDLabel = new CustomLabel(display, this);
 }
 
 void LobbyScreen::resizeEvent(QResizeEvent *event) {
@@ -42,15 +41,18 @@ void LobbyScreen::resizeEvent(QResizeEvent *event) {
     int backButtonWidth = this->getAvaliableWidth() * 0.08, backButtonHeight = this->getAvaliableHeight() * 0.08;
     backButton->setGeometry(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
 
-    // Ready Button
-    int readyButtonWidth = backButtonWidth, readyButtonHeight = backButtonHeight;
-    int readyButtonX = this->getAvaliableWidth() - readyButtonWidth, readyButtonY = this->getPadding();
-    readyButton->setGeometry(readyButtonX, readyButtonY, readyButtonWidth, readyButtonHeight);
+    if (isStartLobby){
+        // Ready Button
+        int readyButtonWidth = backButtonWidth, readyButtonHeight = backButtonHeight;
+        int readyButtonX = this->getAvaliableWidth() - readyButtonWidth, readyButtonY = this->getPadding();
+        readyButton->setGeometry(readyButtonX, readyButtonY, readyButtonWidth, readyButtonHeight);
 
-    // Lobby ID Label
-    int lobbyIDLabelX = backButtonX + backButtonWidth, lobbyIDLabelY = backButtonY;
-    int lobbyIDLabelWidth = this->getAvaliableWidth() - lobbyIDLabelX - readyButtonWidth, lobbyIDLabelHeight = backButtonHeight;
-    lobbyIDLabel->setGeometry(lobbyIDLabelX, lobbyIDLabelY, lobbyIDLabelWidth, lobbyIDLabelHeight);
+        // Lobby ID Label
+        int lobbyIDLabelX = backButtonX + backButtonWidth, lobbyIDLabelY = backButtonY;
+        int lobbyIDLabelWidth = this->getAvaliableWidth() - lobbyIDLabelX - readyButtonWidth, lobbyIDLabelHeight = backButtonHeight;
+        lobbyIDLabel->setGeometry(lobbyIDLabelX, lobbyIDLabelY, lobbyIDLabelWidth, lobbyIDLabelHeight);
+
+    }
 
     // User List View
     int clientListViewX = this->getPadding(), clientListViewY = this->getPadding() + 75;

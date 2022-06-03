@@ -23,6 +23,7 @@ class LobbyScreen : public Screen {
     CustomLabel *lobbyIDLabel;
 
     QString lobbyID;    
+    bool isStartLobby;
 
     void resizeEvent(QResizeEvent *event);
 
