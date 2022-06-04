@@ -1,5 +1,5 @@
-#ifndef NICKNAMEINPUTDIALOG_H
-#define NICKNAMEINPUTDIALOG_H
+#ifndef NICKINPUTDIALOG_H
+#define NICKINPUTDIALOG_H
 
 #include <QDialog>
 #include <QIntValidator>
@@ -9,7 +9,7 @@
 #include "UI/Components/customlineedit.h"
 #include "UI/Components/customlabel.h"
 
-class NicknameInputDialog : public QDialog {
+class NickInputDialog : public QDialog {
     Q_OBJECT
 
     // Widgets
@@ -22,7 +22,7 @@ class NicknameInputDialog : public QDialog {
     bool accepted;
 
 public:
-    explicit NicknameInputDialog(QString text, QWidget *parent = nullptr);
+    explicit NickInputDialog(QString text, QWidget *parent = nullptr);
 
     bool isAccepted();
     QString getText();
@@ -34,4 +34,4 @@ public slots:
     void onCloseClicked();
 };
 
-#endif // NICKNAMEINPUTDIALOG_H
+#endif // NICKINPUTDIALOG_H

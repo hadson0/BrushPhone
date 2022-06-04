@@ -1,23 +1,24 @@
-#ifndef GAMESENTENCESCREEN_H
-#define GAMESENTENCESCREEN_H
+#ifndef SENTENCESCREEN_H
+#define SENTENCESCREEN_H
 
 #include "UI/Screens/screen.h"
-#include "UI/Components/gamesentenceframe.h"
+#include "UI/Components/sentenceframe.h"
 #include "UI/Components/timerwidget.h"
 
-class GameSentenceScreen : public Screen {
+class SentenceScreen : public Screen {
     Q_OBJECT
 
     // Frames
-    GameSentenceFrame *gameSentence;
+    SentenceFrame *gameSentence;
 
     // Widgets
     TimerWidget *timer;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:
-    explicit GameSentenceScreen(QString drawingData, QWidget *parent = nullptr);
+    explicit SentenceScreen(QString drawingData, QWidget *parent = nullptr);
 
 public slots:
 
@@ -26,4 +27,4 @@ signals:
     void sendSentence(QString sentence);
 };
 
-#endif // GAMESENTENCESCREEN_H
+#endif // SENTENCESCREEN_H

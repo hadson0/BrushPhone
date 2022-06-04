@@ -1,7 +1,7 @@
 #include "userlistviewitem.h"
 
 UserListViewItem::UserListViewItem(QString nickname, QWidget *parent)
-    : BackgroundedFrame{parent}, defaultColor(172, 170, 177), readyColor(57, 153, 72), ready(false) {
+    : BackgroundFrame{parent}, defaultColor(172, 170, 177), readyColor(57, 153, 72), ready(false) {
     setColor(defaultColor);
 
     // Label

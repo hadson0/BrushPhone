@@ -9,7 +9,7 @@
 #include "UI/Components/customlabel.h"
 #include "UI/Components/custompushbutton.h"
 #include "UI/Components/timerwidget.h"
-#include "UI/Components/gamesentenceframe.h"
+#include "UI/Components/sentenceframe.h"
 
 class LobbyScreen : public Screen {
     Q_OBJECT
@@ -25,6 +25,7 @@ class LobbyScreen : public Screen {
     QString lobbyID;    
     bool isStartLobby;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:

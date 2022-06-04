@@ -5,10 +5,10 @@
 #include <QTimer>
 #include <QTime>
 
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 #include "UI/Components/customlabel.h"
 
-class TimerWidget : public BackgroundedFrame {
+class TimerWidget : public BackgroundFrame {
     Q_OBJECT
 
     QTimer *timer;

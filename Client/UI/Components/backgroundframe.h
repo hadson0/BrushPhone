@@ -1,5 +1,5 @@
-#ifndef BACKGROUNDEDFRAME_H
-#define BACKGROUNDEDFRAME_H
+#ifndef BACKGROUNDFRAME_H
+#define BACKGROUNDFRAME_H
 
 #include <QFrame>
 #include <QPaintEvent>
@@ -7,7 +7,7 @@
 
 #include <QPainterPath>
 
-class BackgroundedFrame : public QFrame {
+class BackgroundFrame : public QFrame {
     Q_OBJECT    
 
     QColor color;
@@ -15,7 +15,7 @@ class BackgroundedFrame : public QFrame {
     int borderRadius, padding, spacing;
 
 public:
-    explicit BackgroundedFrame(QWidget *parent = nullptr);
+    explicit BackgroundFrame(QWidget *parent = nullptr);
 
     // Getters
     QColor getColor();
@@ -38,4 +38,4 @@ protected:
     void paintEvent(QPaintEvent *event);
 };
 
-#endif // BACKGROUNDEDFRAME_H
+#endif // BACKGROUNDFRAME_H

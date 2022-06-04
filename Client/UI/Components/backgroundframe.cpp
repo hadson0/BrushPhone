@@ -1,57 +1,57 @@
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 
-BackgroundedFrame::BackgroundedFrame(QWidget *parent)
+BackgroundFrame::BackgroundFrame(QWidget *parent)
     : QFrame{parent}, color(75, 37, 150), borderRadius(15), padding(0), spacing(0) {
     // Disable the background (The background was visible, because it's corners are rounded)
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
 }
 
-QColor BackgroundedFrame::getColor() { return color; }
+QColor BackgroundFrame::getColor() { return color; }
 
-int BackgroundedFrame::getAvaliableWidth() {
+int BackgroundFrame::getAvaliableWidth() {
     this->updateAvaliableSize();
     return avaliableSize.width();
 }
 
-int BackgroundedFrame::getAvaliableHeight() {
+int BackgroundFrame::getAvaliableHeight() {
     this->updateAvaliableSize();
     return avaliableSize.height();
 }
 
-int BackgroundedFrame::getBorderRadius() { return borderRadius; }
+int BackgroundFrame::getBorderRadius() { return borderRadius; }
 
-int BackgroundedFrame::getPadding() { return padding; }
+int BackgroundFrame::getPadding() { return padding; }
 
-int BackgroundedFrame::getSpacing() { return spacing; }
+int BackgroundFrame::getSpacing() { return spacing; }
 
-void BackgroundedFrame::setColor(QColor color) {
+void BackgroundFrame::setColor(QColor color) {
     this->color = color;
     this->update();
 }
 
-void BackgroundedFrame::setBorderRadius(int borderRadius) {
+void BackgroundFrame::setBorderRadius(int borderRadius) {
     this->borderRadius = borderRadius;
     this->update();
 }
 
-void BackgroundedFrame::setPadding(int padding) {
+void BackgroundFrame::setPadding(int padding) {
     this->padding = padding;
     updateAvaliableSize();
 }
 
-void BackgroundedFrame::setSpacing(int spacing) {
+void BackgroundFrame::setSpacing(int spacing) {
     this->spacing = spacing;
     this->update();
 }
 
-void BackgroundedFrame::updateAvaliableSize() {
+void BackgroundFrame::updateAvaliableSize() {
     avaliableSize.setHeight(this->height() - 2 * this->padding);
     avaliableSize.setWidth(this->width() - 2 * this->padding);
     this->update();
 }
 
-void BackgroundedFrame::paintEvent(QPaintEvent *event) {
+void BackgroundFrame::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event);    
 
     // Setup the painter

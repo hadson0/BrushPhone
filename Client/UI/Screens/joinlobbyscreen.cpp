@@ -24,9 +24,7 @@ JoinLobbyScreen::JoinLobbyScreen(QWidget *parent)
     connect(joinButton, &QPushButton::clicked, this, &JoinLobbyScreen::onJoinButtonClicked);
 }
 
-void JoinLobbyScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void JoinLobbyScreen::recalculateGeometry() {
     // Label
     int labelWidth = this->width(), labelHeight = this->height() * 0.13;
     int labelX = 0, labelY = this->height() / 4 - labelHeight / 2;
@@ -46,6 +44,11 @@ void JoinLobbyScreen::resizeEvent(QResizeEvent *event) {
     int joinButtonWidth = this->getAvaliableWidth() * 0.25, joinButtonHeight = this->getAvaliableHeight() * 0.15;
     int joinButtonX =  (this->getAvaliableWidth() - joinButtonWidth) / 2, joinButtonY = lobbyIDInputY + inputHeight + this->getSpacing();
     joinButton->setGeometry(joinButtonX, joinButtonY, joinButtonWidth, joinButtonHeight);
+}
+
+void JoinLobbyScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }
 
 void JoinLobbyScreen::onJoinButtonClicked() {

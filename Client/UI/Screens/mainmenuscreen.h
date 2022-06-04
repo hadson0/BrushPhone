@@ -17,6 +17,7 @@ class MainMenuScreen : public Screen {
     CustomLabel *label;
     CustomPushButton *playButton, *quitButton;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:

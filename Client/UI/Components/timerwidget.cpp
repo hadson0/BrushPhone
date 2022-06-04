@@ -1,7 +1,7 @@
 #include "timerwidget.h"
 
 TimerWidget::TimerWidget(int seconds, QWidget *parent)
-    : BackgroundedFrame{parent}, seconds(seconds) {
+    : BackgroundFrame{parent}, seconds(seconds) {
     setPadding(10);
 
     // Label

@@ -1,10 +1,10 @@
 #ifndef USERLISTVIEWITEM_H
 #define USERLISTVIEWITEM_H
 
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 #include "customlabel.h"
 
-class UserListViewItem : public BackgroundedFrame {
+class UserListViewItem : public BackgroundFrame {
     Q_OBJECT
 
     CustomLabel *nicknameLabel;

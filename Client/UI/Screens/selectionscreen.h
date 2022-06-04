@@ -7,7 +7,7 @@
 #include "screen.h"
 #include "UI/Components/customlabel.h"
 #include "UI/Components/custompushbutton.h"
-#include "UI/Components/nicknameinputdialog.h"
+#include "UI/Components/nickinputdialog.h"
 
 class SelectionScreen : public Screen {
     Q_OBJECT
@@ -17,6 +17,7 @@ class SelectionScreen : public Screen {
     QPushButton *createLobbyButton, *joinLobbyButton;
     QPushButton *backButton;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:

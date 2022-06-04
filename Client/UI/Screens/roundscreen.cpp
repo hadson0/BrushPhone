@@ -13,9 +13,7 @@ RoundScreen::RoundScreen(QString sentence, QString drawingData, QWidget *parent)
     displayFrame = new RoundFrame(sentence, drawingData, this);
 }
 
-void RoundScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void RoundScreen::recalculateGeometry() {
     // Next Button
     int nextButtonWidth = this->getAvaliableWidth() * 0.08, nextButtonHeight = this->getAvaliableHeight() * 0.08;
     int nextButtonX = this->getAvaliableWidth() - nextButtonWidth, nextButtonY = this->getPadding();
@@ -25,4 +23,9 @@ void RoundScreen::resizeEvent(QResizeEvent *event) {
     int displayFrameX = this->getPadding(), displayFrameY = this->getPadding() + nextButtonY + nextButtonHeight;
     int gameSentenceWidth = this->getAvaliableWidth(), gameSentenceHeight = this->getAvaliableHeight() - nextButtonHeight - this->getSpacing();
     displayFrame->setGeometry(displayFrameX, displayFrameY, gameSentenceWidth, gameSentenceHeight);
+}
+
+void RoundScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }

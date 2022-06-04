@@ -1,15 +1,15 @@
-#ifndef GAMEDRAWINGFRAME_H
-#define GAMEDRAWINGFRAME_H
+#ifndef DRAWINGFRAME_H
+#define DRAWINGFRAME_H
 
 #include <QInputDialog>
 #include <QColorDialog>
 
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 #include "UI/Components/custompushbutton.h"
 #include "UI/Components/customlabel.h"
 #include "UI/Components/canvas.h"
 
-class GameDrawingFrame : public BackgroundedFrame {
+class DrawingFrame : public BackgroundFrame {
     Q_OBJECT
 
     // Widgets
@@ -21,7 +21,7 @@ class GameDrawingFrame : public BackgroundedFrame {
     void resizeEvent(QResizeEvent *event);
 
 public:
-    explicit GameDrawingFrame(QString sentence, QWidget *parent = nullptr);
+    explicit DrawingFrame(QString sentence, QWidget *parent = nullptr);
 
 public slots:
     void onDoneButtonClicked();
@@ -32,4 +32,4 @@ signals:
     void sendDrawing(QString drawingData);
 };
 
-#endif // GAMEDRAWINGFRAME_H
+#endif // DRAWINGFRAME_H

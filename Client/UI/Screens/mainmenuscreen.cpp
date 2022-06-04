@@ -14,9 +14,7 @@ MainMenuScreen::MainMenuScreen(QWidget *parent)
     connect(quitButton, &QPushButton::clicked, this, &Screen::quitAppRequest);
 }
 
-void MainMenuScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void MainMenuScreen::recalculateGeometry() {
     this->setSpacing(this->height() * 0.015);
 
     // Label proprieties
@@ -34,4 +32,9 @@ void MainMenuScreen::resizeEvent(QResizeEvent *event) {
     // Quit Button
     buttonY += buttonHeight + this->getSpacing();
     quitButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+}
+
+void MainMenuScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }

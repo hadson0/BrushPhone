@@ -1,10 +1,10 @@
 #ifndef CLIENTLISTVIEW_H
 #define CLIENTLISTVIEW_H
 
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 #include "userlistviewitem.h"
 
-class UserListView : public BackgroundedFrame {
+class UserListView : public BackgroundFrame {
     Q_OBJECT
 
     QMap<QString, UserListViewItem *> userMap;

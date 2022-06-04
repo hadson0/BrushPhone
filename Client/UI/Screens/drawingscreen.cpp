@@ -1,23 +1,21 @@
-#include "gamedrawingscreen.h"
+#include "drawingscreen.h"
 
-GameDrawingScreen::GameDrawingScreen(QString sentence, QWidget *parent)
+DrawingScreen::DrawingScreen(QString sentence, QWidget *parent)
     : Screen{parent} {
     setPadding(15);
     setSpacing(10);
 
     // Game sentence frame
-    gameDrawing = new GameDrawingFrame(sentence, this);
-    connect(gameDrawing, &GameDrawingFrame::sendDrawing, this, &GameDrawingScreen::sendDrawing);
+    gameDrawing = new DrawingFrame(sentence, this);
+    connect(gameDrawing, &DrawingFrame::sendDrawing, this, &DrawingScreen::sendDrawing);
 
     // Timer
     timer = new TimerWidget(180, this);
     timer->start();
-    connect(timer, &TimerWidget::isOver, gameDrawing, &GameDrawingFrame::onDoneButtonClicked);
+    connect(timer, &TimerWidget::isOver, gameDrawing, &DrawingFrame::onDoneButtonClicked);
 }
 
-void GameDrawingScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void DrawingScreen::recalculateGeometry() {
     // Timer
     int timerWidht = this->getAvaliableWidth() * 0.1, timerHeight = this->getAvaliableHeight() * 0.08;
     int timerX = (this->width() - timer->width()) / 2, timerY = this->getPadding();
@@ -27,4 +25,9 @@ void GameDrawingScreen::resizeEvent(QResizeEvent *event) {
     int gameDrawingX = this->getPadding(), gameSenteceY = timerY + timer->height() + this->getSpacing();
     int gameDrawingWidth = this->getAvaliableWidth(), gameDrawingHeight = this->getAvaliableHeight() - timer->height() - this->getSpacing();
     gameDrawing->setGeometry(gameDrawingX, gameSenteceY, gameDrawingWidth, gameDrawingHeight);
+}
+
+void DrawingScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }

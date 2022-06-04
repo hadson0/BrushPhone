@@ -1,16 +1,16 @@
-#ifndef GAMESENTENCEFRAME_H
-#define GAMESENTENCEFRAME_H
+#ifndef SENTENCEFRAME_H
+#define SENTENCEFRAME_H
 
 #include <QPixmap>
 #include <QLabel>
 #include <QTemporaryFile>
 
-#include "backgroundedframe.h"
+#include "backgroundframe.h"
 #include "UI/Components/custompushbutton.h"
 #include "UI/Components/customlineedit.h"
 #include "UI/Components/customlabel.h"
 
-class GameSentenceFrame : public BackgroundedFrame {
+class SentenceFrame : public BackgroundFrame {
     Q_OBJECT
 
     // Widgets
@@ -27,7 +27,7 @@ class GameSentenceFrame : public BackgroundedFrame {
     void openImage(QString imageData);
 
 public:
-    explicit GameSentenceFrame(QString drawingData, QWidget *parent = nullptr);
+    explicit SentenceFrame(QString drawingData, QWidget *parent = nullptr);
 
 public slots:
     void onDoneButtonClicked();
@@ -36,4 +36,4 @@ signals:
     void sendSentence(QString sentence);
 };
 
-#endif // GAMESENTENCEFRAME_H
+#endif // SENTENCEFRAME_H

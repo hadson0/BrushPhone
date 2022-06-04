@@ -2,6 +2,7 @@
 #define SCREEN_H
 
 #include <QFrame>
+#include <QResizeEvent>
 
 class Screen : public QFrame {
     Q_OBJECT
@@ -9,7 +10,7 @@ class Screen : public QFrame {
     QSize avaliableSize;
     int padding, spacing;
 
-    virtual void resizeEvent(QResizeEvent *event) = 0; // Force method implementation
+    virtual void recalculateGeometry() = 0; // Abstract method
 
 public:
     Screen(QWidget *parent);

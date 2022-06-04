@@ -1,7 +1,7 @@
-#include "gamedrawingframe.h"
+#include "drawingframe.h"
 
-GameDrawingFrame::GameDrawingFrame(QString sentence, QWidget *parent)
-    : BackgroundedFrame{parent} {
+DrawingFrame::DrawingFrame(QString sentence, QWidget *parent)
+    : BackgroundFrame{parent} {
     setPadding(20);
 
     // Label
@@ -9,11 +9,11 @@ GameDrawingFrame::GameDrawingFrame(QString sentence, QWidget *parent)
 
     // Canvas
     canvas = new Canvas(this);
-    connect(canvas, &Canvas::sendDrawing, this, &GameDrawingFrame::sendDrawing);
+    connect(canvas, &Canvas::sendDrawing, this, &DrawingFrame::sendDrawing);
 
     // Done button
     doneButton = new CustomPushButton("Done", this);
-    connect(doneButton, &QPushButton::clicked, this, &GameDrawingFrame::onDoneButtonClicked);
+    connect(doneButton, &QPushButton::clicked, this, &DrawingFrame::onDoneButtonClicked);
 
     // Clear button
     clearButton = new CustomPushButton("Clear", this);
@@ -21,18 +21,18 @@ GameDrawingFrame::GameDrawingFrame(QString sentence, QWidget *parent)
 
     // Width button
     widthButton = new CustomPushButton("Width", this);
-    connect(widthButton, &QPushButton::clicked, this, &GameDrawingFrame::setPenWidth);
+    connect(widthButton, &QPushButton::clicked, this, &DrawingFrame::setPenWidth);
 
     // Color button
     colorButton = new CustomPushButton("Color", this);
-    connect(colorButton, &QPushButton::clicked, this, &GameDrawingFrame::setPenColor);
+    connect(colorButton, &QPushButton::clicked, this, &DrawingFrame::setPenColor);
 }
 
-void GameDrawingFrame::onDoneButtonClicked() {
+void DrawingFrame::onDoneButtonClicked() {
     canvas->saveImage();
 }
 
-void GameDrawingFrame::setPenWidth() {
+void DrawingFrame::setPenWidth() {
     bool ok;
     int width = QInputDialog::getInt(this, "Brush Phone", "Select pen width:",
                                         canvas->getPenWidth(), 1, 30, 1, &ok);
@@ -41,7 +41,7 @@ void GameDrawingFrame::setPenWidth() {
     }
 }
 
-void GameDrawingFrame::setPenColor() {
+void DrawingFrame::setPenColor() {
     QColor color = QColorDialog::getColor(canvas->getPenColor(), this,
                                           "Brush Phone", QColorDialog::DontUseNativeDialog);
     if (color.isValid()) {
@@ -49,7 +49,7 @@ void GameDrawingFrame::setPenColor() {
     }
 }
 
-void GameDrawingFrame::resizeEvent(QResizeEvent *event) {
+void DrawingFrame::resizeEvent(QResizeEvent *event) {
     Q_UNUSED(event);
     setSpacing(10);
 

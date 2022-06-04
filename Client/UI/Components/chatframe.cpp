@@ -1,7 +1,7 @@
 ﻿#include "chatframe.h"
 
 ChatFrame::ChatFrame(QWidget *parent)
-    : BackgroundedFrame{parent} {
+    : BackgroundFrame{parent} {
     setPadding(10);
 
     // Chat View
@@ -16,6 +16,11 @@ ChatFrame::ChatFrame(QWidget *parent)
     sendMessageButton = new CustomPushButton("Send", this);
     connect(sendMessageButton, &QPushButton::clicked, this, &ChatFrame::onSendButtonClicked);
 
+    readHistory();
+}
+
+ChatFrame::~ChatFrame() {
+    saveHistory();
 }
 
 void ChatFrame::resizeEvent(QResizeEvent *event) {
@@ -37,6 +42,29 @@ void ChatFrame::resizeEvent(QResizeEvent *event) {
     sendMessageButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
+void ChatFrame::readHistory() {
+    QFile file("chatHistory.txt");
+
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream in(&file);
+        QString text = in.readAll();
+
+        chatView->setText(text);
+
+        file.close();
+    }
+}
+
+void ChatFrame::saveHistory() {
+    QString text = chatView->toPlainText();
+    QFile file("chatHistory.txt");
+    if(file.open(QFile::WriteOnly | QFile::Text)) {
+        QTextStream out(&file);
+        out << text;
+        file.flush();
+        file.close();
+    }
+}
 void ChatFrame::onSendButtonClicked() {
     QString message = chatInput->toPlainText();
     chatInput->clear();

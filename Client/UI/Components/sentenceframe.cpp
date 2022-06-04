@@ -1,7 +1,7 @@
-#include "gamesentenceframe.h"
+#include "sentenceframe.h"
 
-GameSentenceFrame::GameSentenceFrame(QString drawingData, QWidget *parent)
-    : BackgroundedFrame{parent}, hasDrawing(false) {
+SentenceFrame::SentenceFrame(QString drawingData, QWidget *parent)
+    : BackgroundFrame{parent}, hasDrawing(false) {
     setPadding(10);
     setSpacing(10);
 
@@ -16,11 +16,11 @@ GameSentenceFrame::GameSentenceFrame(QString drawingData, QWidget *parent)
 
     // Sentence input
     sentenceInput = new CustomLineEdit(this);
-    connect(sentenceInput, &QLineEdit::returnPressed, this, &GameSentenceFrame::onDoneButtonClicked);
+    connect(sentenceInput, &QLineEdit::returnPressed, this, &SentenceFrame::onDoneButtonClicked);
 
     // Done button
     doneButton = new CustomPushButton("Done", this);
-    connect(doneButton, &QPushButton::clicked, this, &GameSentenceFrame::onDoneButtonClicked);
+    connect(doneButton, &QPushButton::clicked, this, &SentenceFrame::onDoneButtonClicked);
 
     // Gambiarra
     hasDrawing = drawingData != "";
@@ -39,7 +39,7 @@ GameSentenceFrame::GameSentenceFrame(QString drawingData, QWidget *parent)
     }
 }
 
-void GameSentenceFrame::resizeEvent(QResizeEvent *event) {
+void SentenceFrame::resizeEvent(QResizeEvent *event) {
     Q_UNUSED(event);
 
     if (hasDrawing) {
@@ -81,7 +81,7 @@ void GameSentenceFrame::resizeEvent(QResizeEvent *event) {
     }
 }
 
-void GameSentenceFrame::openImage(QString imageData) {
+void SentenceFrame::openImage(QString imageData) {
     if (tempFile->open()) {
         QByteArray bytes = QByteArray::fromHex(imageData.toLocal8Bit());
         tempFile->write(bytes);
@@ -90,7 +90,7 @@ void GameSentenceFrame::openImage(QString imageData) {
     }
 }
 
-void GameSentenceFrame::onDoneButtonClicked() {
+void SentenceFrame::onDoneButtonClicked() {
     QString sentence = sentenceInput->text();
 
     if (sentence.isEmpty()) {

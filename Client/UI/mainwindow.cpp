@@ -72,8 +72,10 @@ void MainWindow::displayMenuScreen(QString destinationMenuScreen) {
 }
 
 void MainWindow::displayLobbyScreen(QString lobbyID) {
-    gameScreen->deleteLater();
-    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    if (gameScreen != nullptr) {
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    }
 
     LobbyScreen *lobbyScreen = new LobbyScreen(lobbyID, this);
     connect(clientManager, &ClientManager::userListChanged, lobbyScreen, &LobbyScreen::userListChanged);
@@ -94,8 +96,10 @@ void MainWindow::displayLobbyScreen(QString lobbyID) {
 }
 
 void MainWindow::displaySentenceScreen(QString drawingData) {
-    gameScreen->deleteLater();
-    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    if (gameScreen != nullptr) {
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    }
 
     SentenceScreen *gameSentenceScreen = new SentenceScreen(drawingData, this);
     connect(gameSentenceScreen, &SentenceScreen::sendSentence, clientManager, &ClientManager::sendSentence);
@@ -113,8 +117,10 @@ void MainWindow::displaySentenceScreen(QString drawingData) {
 }
 
 void MainWindow::displayDrawingScreen(QString sentence) {
-    gameScreen->deleteLater();
-    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    if (gameScreen != nullptr) {
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    }
 
     DrawingScreen *gameDrawingScreen = new DrawingScreen(sentence, this);
     connect(gameDrawingScreen, &DrawingScreen::sendDrawing, clientManager, &ClientManager::sendDrawing);
@@ -132,8 +138,10 @@ void MainWindow::displayDrawingScreen(QString sentence) {
 }
 
 void MainWindow::displayRoundScreen(QString sentence, QString drawingData) {
-    gameScreen->deleteLater();
-    gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    if (gameScreen != nullptr) {
+        gameScreen->deleteLater();
+        gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+    }
 
     RoundScreen *roundDisplayScreen = new RoundScreen(sentence, drawingData, this);
     connect(roundDisplayScreen, &RoundScreen::nextRound, clientManager, &ClientManager::getRoundRequest);

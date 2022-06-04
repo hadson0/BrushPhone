@@ -33,9 +33,7 @@ LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
     }
 }
 
-void LobbyScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void LobbyScreen::recalculateGeometry() {
     // Back Button
     int backButtonX = this->getPadding(), backButtonY = this->getPadding();
     int backButtonWidth = this->getAvaliableWidth() * 0.08, backButtonHeight = this->getAvaliableHeight() * 0.08;
@@ -63,6 +61,11 @@ void LobbyScreen::resizeEvent(QResizeEvent *event) {
     int chatFrameX = clientListViewWidth + 2 * this->getPadding(), chatFrameY = clientListViewY;
     int chatFrameWidth = (this->getAvaliableWidth() - this->getPadding()) * 0.6, chatFrameHeight = clientListViewHeight;
     chatFrame->setGeometry(chatFrameX, chatFrameY, chatFrameWidth, chatFrameHeight);
+}
+
+void LobbyScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }
 
 void LobbyScreen::requestSendLobbyMessage(QString message) {

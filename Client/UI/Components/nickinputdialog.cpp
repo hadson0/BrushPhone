@@ -1,6 +1,6 @@
-#include "nicknameinputdialog.h"
+#include "nickinputdialog.h"
 
-NicknameInputDialog::NicknameInputDialog(QString text, QWidget *parent)
+NickInputDialog::NickInputDialog(QString text, QWidget *parent)
     : QDialog{parent}, nickname(text), accepted(false) {
     // Window proprieties
     this->setFixedSize(400, 175);
@@ -47,16 +47,16 @@ NicknameInputDialog::NicknameInputDialog(QString text, QWidget *parent)
     vbox->addWidget(buttonBox);
     this->setLayout(vbox);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &NicknameInputDialog::onOkClicked);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &NicknameInputDialog::onCloseClicked);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &NickInputDialog::onOkClicked);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &NickInputDialog::onCloseClicked);
 }
 
-bool NicknameInputDialog::isAccepted() { return accepted; }
+bool NickInputDialog::isAccepted() { return accepted; }
 
-QString NicknameInputDialog::getText() { return nickname; }
+QString NickInputDialog::getText() { return nickname; }
 
-QString NicknameInputDialog::getNickname(QString text, QWidget *parent) {
-    NicknameInputDialog nicknameDialog(text, parent);
+QString NickInputDialog::getNickname(QString text, QWidget *parent) {
+    NickInputDialog nicknameDialog(text, parent);
     nicknameDialog.exec();
 
     if (nicknameDialog.isAccepted()) {
@@ -66,11 +66,11 @@ QString NicknameInputDialog::getNickname(QString text, QWidget *parent) {
     return "*CLOSED"; // The input doesn't accept especial characters, so I used * to handle the close button
 }
 
-void NicknameInputDialog::onOkClicked() {
+void NickInputDialog::onOkClicked() {
     nickname = input->text();
     accepted = true;
     this->close();
 }
 
-void NicknameInputDialog::onCloseClicked() { this->close(); }
+void NickInputDialog::onCloseClicked() { this->close(); }
 

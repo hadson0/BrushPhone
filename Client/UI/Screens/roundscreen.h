@@ -14,6 +14,7 @@ class RoundScreen : public Screen {
     // Frame
     RoundFrame *displayFrame;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:

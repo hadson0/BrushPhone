@@ -7,7 +7,7 @@
 #include "UI/Components/customlabel.h"
 #include "UI/Components/custompushbutton.h"
 #include "UI/Components/customlineedit.h"
-#include "UI/Components/nicknameinputdialog.h"
+#include "UI/Components/nickinputdialog.h"
 
 class JoinLobbyScreen : public Screen {
     Q_OBJECT
@@ -17,6 +17,7 @@ class JoinLobbyScreen : public Screen {
     CustomPushButton *joinButton, *backButton;
     CustomLineEdit *lobbyIDInput;
 
+    void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);
 
 public:

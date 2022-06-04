@@ -18,9 +18,7 @@ SelectionScreen::SelectionScreen(QWidget *parent)
     connect(backButton, &QPushButton::clicked, this, &Screen::backRequest);
 }
 
-void SelectionScreen::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
-
+void SelectionScreen::recalculateGeometry() {
     this->setSpacing(this->height() * 0.015);
 
     // Label proprieties
@@ -42,6 +40,11 @@ void SelectionScreen::resizeEvent(QResizeEvent *event) {
     // Back Button
     buttonY += buttonHeight + this->getSpacing();
     backButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
+}
+
+void SelectionScreen::resizeEvent(QResizeEvent *event) {
+    recalculateGeometry();
+    event->accept();
 }
 
 void SelectionScreen::onCreateLobbyCklicked() {
