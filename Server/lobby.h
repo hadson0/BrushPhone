@@ -27,7 +27,7 @@ public:
     explicit Lobby(QString lobbyID, QObject *parent);
 
     // Getters
-    QString getID();
+    QString getID() const;
     QStringList getClientList();
     QString getUserNick(QString clientID);
     QStringList getUsers();
@@ -44,8 +44,8 @@ public:
 
 public slots:
     void onGameStarted();
-    void onGameSentencePhase();
-    void onGameDrawingPhase();
+    void onSentencePhase();
+    void onDrawingPhase();
     void getGameRound();
 
     void setDrawingRequest(QString clientID, QString drawing);
@@ -55,10 +55,10 @@ private:
     void createGame();
 
 signals:
-    void readyListChanged(QString readyUsers, QStringList clientList);
-    void userListChanged(QString users, QStringList clientList);
+    void readyListChanged(QString readyUsers, QStringList &clientList);
+    void userListChanged(QString users, QStringList &clientList);
 
-    void gameStarted(QStringList clientList);
+    void gameStarted(QStringList &clientList);
 
     void sentenceRequest(QString clientID, QString drawing);
     void drawingRequest(QString clientID, QString sentence);
@@ -66,8 +66,8 @@ signals:
     void setSentence(QString userNick, QString sentence);
     void setDrawing(QString userNick, QString drawingData);
 
-    void displayRoundRequest(QString sentence, QString drawing, QStringList clientList);
-    void finalLobby(QString userList, QStringList clientList);
+    void displayRoundRequest(QString sentence, QString drawing, QStringList &clientList);
+    void finalLobby(QString userList, QStringList &clientList);
 };
 
 #endif // LOBBY_H

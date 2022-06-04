@@ -41,14 +41,14 @@ public slots:
     void lobbyMessageRequest(QString message, QString lobbyID, QString senderID);
     void toggleReadyRequest(QString lobbyID, QString clintID);
 
-    void onUserListChanged(QString users, QStringList clientList);
-    void onReadyListChanged(QString readyUSers, QStringList clientList);
+    void onUserListChanged(QString users, QStringList &clientList);
+    void onReadyListChanged(QString readyUSers, QStringList &clientList);
 
-    void onGameStarted(QStringList clientList);
+    void onGameStarted(QStringList &clientList);
     void onSentenceRequest(QString clientID, QString drawing);
     void onDrawingRequest(QString clientID, QString sentence);
-    void onDisplayRoundRequest(QString sentence, QString drawing, QStringList clientList);
-    void onFinalLobby(QString users, QStringList clientList);
+    void onDisplayRoundRequest(QString sentence, QString drawing, QStringList &clientList);
+    void onFinalLobby(QString users, QStringList &clientList);
 
     void onClientDisconnected(QString clientID);
 

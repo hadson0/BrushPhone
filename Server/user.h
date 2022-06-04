@@ -13,8 +13,8 @@ public:
     explicit User(QString nickname, QObject *parent = nullptr);
 
     // Getters
-    bool isReady();
-    QString getNickname();
+    bool isReady() const;
+    QString getNickname() const;
 
     // Setters
     void toggleReady();

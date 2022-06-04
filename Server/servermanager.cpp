@@ -99,7 +99,8 @@ void ClientManager::lobbyMessageRequest(QString message, QString lobbyID, QStrin
         QString senderNick = lobby->getUserNick(clientID);
 
         // Sends the message to all the clients in the lobby
-        webSocketHandler->sendTextMessage("type:lobbyMessage;payLoad:" + message + ";senderNick:" + senderNick, lobby->getClientList());
+        QStringList clientList = lobby->getClientList();
+        webSocketHandler->sendTextMessage("type:lobbyMessage;payLoad:" + message + ";senderNick:" + senderNick, clientList);
     } else {
         // Informs the client that an error has occurred
         webSocketHandler->sendTextMessage("type:error;payLoad:lobbyMessageError", clientID);
@@ -114,7 +115,7 @@ void ClientManager::toggleReadyRequest(QString lobbyID, QString clientID) {
     }
 }
 
-void ClientManager::onUserListChanged(QString userList, QStringList clientList) {
+void ClientManager::onUserListChanged(QString userList, QStringList &clientList) {
     // If there is clients in lobby
     if (!userList.isEmpty() && !clientList.isEmpty()) {
         // Update the user list to all the clients in the lobby
@@ -132,12 +133,12 @@ void ClientManager::onUserListChanged(QString userList, QStringList clientList) 
     }
 }
 
-void ClientManager::onReadyListChanged(QString readyUSers, QStringList clientList) {
+void ClientManager::onReadyListChanged(QString readyUSers, QStringList &clientList) {
     // Update the ready user list to all the clients in the lobby
     webSocketHandler->sendTextMessage("type:updatedReadyUserList;payLoad:0;userList:" + readyUSers, clientList);
 }
 
-void ClientManager::onGameStarted(QStringList clientList) {
+void ClientManager::onGameStarted(QStringList &clientList) {
     // Informs all clients that the game started
     webSocketHandler->sendTextMessage("type:gameStarted;payLoad:0", clientList);
 }
@@ -152,12 +153,12 @@ void ClientManager::onDrawingRequest(QString clientID, QString sentence) {
     webSocketHandler->sendTextMessage("type:drawSentence;payLoad:" + sentence, clientID);
 }
 
-void ClientManager::onDisplayRoundRequest(QString sentence, QString drawingData, QStringList clientList) {
+void ClientManager::onDisplayRoundRequest(QString sentence, QString drawingData, QStringList &clientList) {
     // Informs all clients to display the round
     webSocketHandler->sendTextMessage("type:displayRound;sentence:" + sentence + ";drawingData:" + drawingData, clientList);
 }
 
-void ClientManager::onFinalLobby(QString userList, QStringList clientList) {
+void ClientManager::onFinalLobby(QString userList, QStringList &clientList) {
     // Informs all clients to display the final lobby
     webSocketHandler->sendTextMessage("type:finalLobby;payLoad:0;userList:" + userList, clientList);
 }

@@ -20,10 +20,10 @@ class Game : public QObject {
 public:
     explicit Game(QObject *parent = nullptr);
 
-    void startGame(QStringList userList);
+    void startGame(QStringList &userList);
     void advancePhase();
 
-    Round getRound(int storyIndex, int roundIndex);
+    Round getRound(int storyIndex, int roundIndex) const;
     QString getSentence(QString userNick);
 
     QString getDrawing(QString userNick);

@@ -34,7 +34,7 @@ public:
 
     QString generateRandomID();
     void sendTextMessage(QString message, QString clientID);
-    void sendTextMessage(QString message, QStringList clientIDList);
+    void sendTextMessage(QString message, QStringList &clientIDList);
 
 public slots:
     void onNewSocketConnection();

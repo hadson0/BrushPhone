@@ -3,7 +3,7 @@
 Game::Game(QObject *parent)
     : QObject{parent}, gamePhase(0) {}
 
-void Game::startGame(QStringList userList) {
+void Game::startGame(QStringList &userList) {
     int numbUsers = userList.size();
     gamePhase = 0;
     stories.resize(numbUsers);
@@ -43,7 +43,7 @@ void Game::advancePhase() {
 }
 
 // Retruns the sentence and the drawing of the respective round
-Round Game::getRound(int storyIndex, int roundIndex) {
+Round Game::getRound(int storyIndex, int roundIndex) const {
     return stories[storyIndex][roundIndex];
 }
 

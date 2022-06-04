@@ -3,7 +3,7 @@
 Lobby::Lobby(QString lobbyID, QObject *parent)
     : QObject{parent} , lobbyID(lobbyID), isGameOn(false), game(nullptr), storyIndex(0), roundIndex(0) {}
 
-QString Lobby::getID() { return lobbyID; }
+QString Lobby::getID() const { return lobbyID; }
 
 // Returns a QStringList containing all the usersIDs
 QStringList Lobby::getClientList() { return userMap.keys(); }
@@ -61,7 +61,8 @@ void Lobby::toggleReady(QString clientID) {
     if (userMap.contains(clientID)) {
         userMap[clientID]->toggleReady();
 
-        emit readyListChanged(getReadyUsersStr(), getClientList());
+        QStringList clientList = this->getClientList();
+        emit readyListChanged(getReadyUsersStr(), clientList);
     }
     bool allReady = true;
     QMap<QString, User*>::iterator it = userMap.begin();
@@ -93,8 +94,9 @@ void Lobby::addUser(QString clientID, QString nickname) {
         }
     }
 
-    emit userListChanged(getUsersToStr(), getClientList());
-    emit readyListChanged(getReadyUsersStr(), getClientList());
+    QStringList clientList = getClientList();
+    emit userListChanged(getUsersToStr(), clientList);
+    emit readyListChanged(getReadyUsersStr(), clientList);
 }
 
 // Remove the user from the lobby and resets all the ready status
@@ -105,14 +107,15 @@ void Lobby::removeUser(QString clientID) {
     }
 
     // Set all the ready status to false
-    for (const QString &user : getClientList()) {
+     QStringList clientList = getClientList();
+    for (const QString &user : clientList) {
         if (userMap[user]->isReady()) {
             userMap[user]->toggleReady();
         }
     }
 
-    emit userListChanged(getUsersToStr(), getClientList());
-    emit readyListChanged(getReadyUsersStr(), getClientList());
+    emit userListChanged(getUsersToStr(), clientList);
+    emit readyListChanged(getReadyUsersStr(), clientList);
 }
 
 bool Lobby::containsNickname(QString nickname) {
@@ -126,10 +129,11 @@ bool Lobby::containsNickname(QString nickname) {
 }
 
 void Lobby::onGameStarted() {
-    emit gameStarted(this->getClientList());
+    QStringList clientList = this->getClientList();
+    emit gameStarted(clientList);
 }
 
-void Lobby::onGameSentencePhase() {
+void Lobby::onSentencePhase() {
     QStringList clientList = this->getClientList();
     for (const QString &client : clientList) {
         QString userNick = userMap[client]->getNickname();
@@ -137,7 +141,7 @@ void Lobby::onGameSentencePhase() {
     }
 }
 
-void Lobby::onGameDrawingPhase() {
+void Lobby::onDrawingPhase() {
     QStringList clientList = this->getClientList();
     for (const QString &client : clientList) {
         QString userNick = userMap[client]->getNickname();
@@ -146,11 +150,12 @@ void Lobby::onGameDrawingPhase() {
 }
 
 void Lobby::getGameRound() {
+    QStringList clientList = this->getClientList();
     if (storyIndex < userMap.size()) {
         Round round = game->getRound(storyIndex, roundIndex);
-        emit displayRoundRequest(round.first, round.second, this->getClientList());
+        emit displayRoundRequest(round.first, round.second, clientList);
     } else {
-        emit finalLobby(this->getUsersToStr(), this->getClientList());
+        emit finalLobby(this->getUsersToStr(), clientList);
     }
     getNextIndex(roundIndex);
 
@@ -175,11 +180,12 @@ void Lobby::createGame() {
         connect(this, &Lobby::setDrawing, game, &Game::setDrawing);
 
         connect(game, &Game::started, this, &Lobby::onGameStarted);
-        connect(game, &Game::sentencePhase, this, &Lobby::onGameSentencePhase);
-        connect(game, &Game::drawingPhase, this, &Lobby::onGameDrawingPhase);
+        connect(game, &Game::sentencePhase, this, &Lobby::onSentencePhase);
+        connect(game, &Game::drawingPhase, this, &Lobby::onDrawingPhase);
         connect(game, &Game::ended, this, &Lobby::getGameRound);
 
-        game->startGame(this->getUsers());
+        QStringList userList = this->getUsers();
+        game->startGame(userList);
 
         qDebug() << "Game started, Lobby ID: " + lobbyID;
     }

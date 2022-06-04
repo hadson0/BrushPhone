@@ -40,7 +40,7 @@ void WebSocketHandler::sendTextMessage(QString message, QString clientID) {
 }
 
 // Sends a text message to multiple clients
-void WebSocketHandler::sendTextMessage(QString message, QStringList clientsID) {
+void WebSocketHandler::sendTextMessage(QString message, QStringList &clientsID) {
     for (auto &clientID : clientsID)
         sendTextMessage(message, clientID);
 }
