@@ -30,6 +30,7 @@ class LobbyScreen : public Screen {
 
 public:
     explicit LobbyScreen(QString lobbyID, QWidget *parent);
+    ~LobbyScreen();
 
 public slots:
     void requestSendLobbyMessage(QString message);

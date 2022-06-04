@@ -16,13 +16,11 @@ class ChatFrame : public BackgroundFrame {
 
     void resizeEvent(QResizeEvent *event);
 
-    void readHistory();
-        void saveHistory();
-      //void watchHistoryChannel();
-
 public:
     explicit ChatFrame(QWidget *parent = nullptr);
-    ~ChatFrame();
+
+    void readHistoric();
+    void saveHistoric();
 
 public slots:
     void onSendButtonClicked();

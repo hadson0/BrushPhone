@@ -15,12 +15,6 @@ ChatFrame::ChatFrame(QWidget *parent)
     // Send Message button
     sendMessageButton = new CustomPushButton("Send", this);
     connect(sendMessageButton, &QPushButton::clicked, this, &ChatFrame::onSendButtonClicked);
-
-    readHistory();
-}
-
-ChatFrame::~ChatFrame() {
-    saveHistory();
 }
 
 void ChatFrame::resizeEvent(QResizeEvent *event) {
@@ -42,8 +36,8 @@ void ChatFrame::resizeEvent(QResizeEvent *event) {
     sendMessageButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
-void ChatFrame::readHistory() {
-    QFile file("chatHistory.txt");
+void ChatFrame::readHistoric() {
+    QFile file("chatHistoric.txt");
 
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
@@ -55,9 +49,9 @@ void ChatFrame::readHistory() {
     }
 }
 
-void ChatFrame::saveHistory() {
+void ChatFrame::saveHistoric() {
     QString text = chatView->toPlainText();
-    QFile file("chatHistory.txt");
+    QFile file("chatHistoric.txt");
     if(file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
         out << text;
