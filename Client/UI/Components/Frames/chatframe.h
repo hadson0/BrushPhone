@@ -19,8 +19,8 @@ class ChatFrame : public BackgroundFrame {
 public:
     explicit ChatFrame(QWidget *parent = nullptr);
 
-    void readHistoric();
-    void saveHistoric();
+    bool readHistoric();
+    bool saveHistoric();
 
 public slots:
     void onSendButtonClicked();

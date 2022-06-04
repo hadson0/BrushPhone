@@ -1,7 +1,7 @@
 #include "lobby.h"
 
 Lobby::Lobby(QString lobbyID, QObject *parent)
-    : QObject{parent} , lobbyID(lobbyID), isGameOn(false), game(nullptr), storyIndex(0), roundIndex(0) {}
+    : QObject{parent} , lobbyID(lobbyID), gameOn(false), game(nullptr), storyIndex(0), roundIndex(0) {}
 
 QString Lobby::getID() const { return lobbyID; }
 
@@ -57,6 +57,8 @@ QString Lobby::getReadyUsersStr() {
     return readyUserList;
 }
 
+bool Lobby::isGameOn() const { return gameOn; }
+
 void Lobby::toggleReady(QString clientID) {
     if (userMap.contains(clientID)) {
         userMap[clientID]->toggleReady();
@@ -72,7 +74,7 @@ void Lobby::toggleReady(QString clientID) {
         }
     }
 
-    bool isReadyToStart = allReady && !userMap.isEmpty()  && (userMap.size() % 2 == 0) && !isGameOn;
+    bool isReadyToStart = allReady && !userMap.isEmpty()  && (userMap.size() % 2 == 0) && !gameOn;
 
     if (isReadyToStart) {
         this->createGame();        
@@ -186,6 +188,8 @@ void Lobby::createGame() {
 
         QStringList userList = this->getUsers();
         game->startGame(userList);
+
+        gameOn = true;
 
         qDebug() << "Game started, Lobby ID: " + lobbyID;
     }

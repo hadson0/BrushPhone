@@ -49,6 +49,8 @@ void ClientManager::readNickname() {
         nickname = text;
 
         file.close();
+    } else {
+        emit error("fileError");
     }
 }
 
@@ -59,6 +61,8 @@ void ClientManager::writeNickname() {
         out << nickname;
         file.flush();
         file.close();
+    } else {
+        emit error("fileError");
     }
 }
 

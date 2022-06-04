@@ -17,7 +17,7 @@ class Lobby : public QObject {
     QString lobbyID;
     QMap<QString, User *> userMap; // <clientID, User>
 
-    bool isGameOn;
+    bool gameOn;
     Game *game;
 
     int storyIndex, roundIndex;
@@ -33,6 +33,7 @@ public:
     QStringList getUsers();
     QString getUsersToStr();
     QString getReadyUsersStr();
+    bool isGameOn() const;
 
     // Setters
     void toggleReady(QString clientID);    

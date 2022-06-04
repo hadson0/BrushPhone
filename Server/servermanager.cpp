@@ -29,6 +29,15 @@ QString ClientManager::generateRandomID() {
     return QString::number(idGenerator(generator));
 }
 
+void ClientManager::deleteLobby(QString lobbyID) {
+    // Checks if the lobby is registered
+    if (lobbyMap.contains(lobbyID)) {
+        Lobby *lobby = lobbyMap[lobbyID];
+        lobbyMap.remove(lobbyID);
+        lobby->deleteLater();
+    }
+}
+
 void ClientManager::createLobbyRequest(QString clientID, QString nickname) {
     QString newLobbyID = generateRandomID();
 
@@ -165,8 +174,24 @@ void ClientManager::onFinalLobby(QString userList, QStringList &clientList) {
 
 void ClientManager::onClientDisconnected(QString clientID) {
     if (clientLobbyMap.contains(clientID)) { // If the client was in a lobby
-        clientLobbyMap[clientID]->removeUser(clientID); // Exits the lobby
+        Lobby *lobby = clientLobbyMap[clientID];
+
+        // Disconnects the client
+        lobby->removeUser(clientID);
         clientLobbyMap.remove(clientID);
-        qDebug() << "Lobby deleted";
+
+        QStringList clientList = lobby->getClientList();
+
+        if (lobby->isGameOn()) {
+            webSocketHandler->sendTextMessage("type:error;payLoad:userDisconnected", clientList);
+            deleteLobby(lobby->getID());
+            qDebug() << "Lobby deleted";
+        }
+
+        if (clientList.isEmpty()) {
+            deleteLobby(lobby->getID());
+            qDebug() << "Lobby deleted";
+        }
+
     }
 }

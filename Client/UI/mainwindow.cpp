@@ -248,5 +248,23 @@ void MainWindow::onErrorOccurrence(QString errorCode) {
         QMessageBox::warning(this, "Error", "Connection to server failed.");
         closeAllScreens();
     }
+
+    else if (errorCode == "comunicationError") {
+        QMessageBox::warning(this, "Error", "Communication with the server failed.");
+        closeAllScreens();
+    }
+
+    else if (errorCode == "fileError") {
+        QMessageBox::warning(this, "Error", "An unexpected error has occurred.\n "
+                                            "Unable to handle files.");
+        closeAllScreens();
+    }
+
+    else if (errorCode == "userDisconnected") {
+        QMessageBox::warning(this, "Error", "A user disconnected from the lobby while the game was still running.\n "
+                                            "You will be disconnected from the lobby");
+        closeAllScreens();
+    }
+
 }
 

@@ -36,7 +36,7 @@ void ChatFrame::resizeEvent(QResizeEvent *event) {
     sendMessageButton->setGeometry(buttonX, buttonY, buttonWidth, buttonHeight);
 }
 
-void ChatFrame::readHistoric() {
+bool ChatFrame::readHistoric() {
     QFile file("chatHistoric.txt");
 
     if (file.open(QFile::ReadOnly | QFile::Text)) {
@@ -46,10 +46,13 @@ void ChatFrame::readHistoric() {
         chatView->setText(text);
 
         file.close();
+        return true;
     }
+
+    return false;
 }
 
-void ChatFrame::saveHistoric() {
+bool ChatFrame::saveHistoric() {
     QString text = chatView->toPlainText();
     QFile file("chatHistoric.txt");
     if(file.open(QFile::WriteOnly | QFile::Text)) {
@@ -57,8 +60,12 @@ void ChatFrame::saveHistoric() {
         out << text;
         file.flush();
         file.close();
+        return true;
     }
+
+    return false;
 }
+
 void ChatFrame::onSendButtonClicked() {
     QString message = chatInput->toPlainText();
     chatInput->clear();

@@ -33,6 +33,7 @@ public:
     }
 
     QString generateRandomID();
+    void deleteLobby(QString lobbyID);
 
 public slots:
     void createLobbyRequest(QString clientID, QString nickname);

@@ -36,6 +36,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!clientID.isEmpty()) {
             qDebug() << "User ID received: " << clientID;
             emit setClientID(clientID);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -47,6 +49,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!lobbyID.isEmpty() && !userList.isEmpty()) {
             qDebug() << "New lobby, ID: " << lobbyID;
             emit newLobby(lobbyID, userList);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -57,6 +61,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!userList.isEmpty()) {
             qDebug() << "Users in lobby: " << userList;
             emit userListUpdated(userList);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -67,6 +73,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
 
         if (!lobbyMessage.isEmpty() && !senderNick.isEmpty()) {
             emit newLobbyMessageRecieved(lobbyMessage, senderNick);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -77,6 +85,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!userList.isEmpty()) {
             qDebug() << "Ready users in lobby: " << userList;
             emit readyListUpdated(userList);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -91,6 +101,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
 
         if (!drawingData.isEmpty()) {
             emit getSentence(drawingData);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -100,6 +112,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
 
         if (!sentence.isEmpty()) {
             emit getDrawing(sentence);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -111,6 +125,8 @@ void MessageProcessHandler::processSocketMessage(QString message) {
         if (!sentence.isEmpty() && !drawingData.isEmpty()) {
             qDebug() << "Users in lobby: " << userList;
             emit displayRound(sentence, drawingData);
+        } else {
+            emit error("comunicationError");
         }
     }
 
@@ -125,11 +141,13 @@ void MessageProcessHandler::processSocketMessage(QString message) {
     }
 
     // Errors
-    // type:joinError;payLoad:DNE
+    // type:error;payLoad:existingNickError
     else if (type == "error") {
         errorCode = getMessageData(message, "payLoad");
         if (!errorCode.isEmpty()) {            
             emit error(errorCode);
+        } else {
+            emit error("comunicationError");
         }
     }
 }

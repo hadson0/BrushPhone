@@ -30,13 +30,15 @@ LobbyScreen::LobbyScreen(QString lobbyID, QWidget *parent)
 
         // Lobby ID Label
         lobbyIDLabel = new CustomLabel("Lobby ID: " + lobbyID, this);
-    } else {
-        chatFrame->readHistoric();
+    } else if (!chatFrame->readHistoric()) {
+        emit error("fileError");
     }
 }
 
 LobbyScreen::~LobbyScreen() {
-    chatFrame->saveHistoric();
+    if (!chatFrame->saveHistoric()) {
+        emit error("fileError");
+    }
 }
 
 void LobbyScreen::recalculateGeometry() {
