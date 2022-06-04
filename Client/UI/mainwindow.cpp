@@ -185,15 +185,20 @@ void MainWindow::closeAllScreens() {
 void MainWindow::onBackRequested() {
     // Deletes the current screen
     if (gameScreen != nullptr) { // If the current screen is the lobby screen
-        clientManager->leaveLobby();
         gameScreen->deleteLater();
         gameScreen = nullptr; // Sets the lobbyScreen pointer to null, to avoid errors
+
+        if (qobject_cast<LobbyScreen *>(sender())) {
+            clientManager->leaveLobby();
+        }
+
         menuScreenStack.top()->show();
     } else if (qobject_cast<SelectionScreen *>(sender())) { // If the current screen is a SelectionScreen
         this->closeAllScreens();
     } else {
         delete menuScreenStack.top();
         menuScreenStack.pop();
+
         menuScreenStack.top()->show();
     }
 }

@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QFile>
-#include <QTemporaryFile>
 
 #include "Controllers/messageprocesshandler.h"
 #include "UI/Components/nickinputdialog.h"
