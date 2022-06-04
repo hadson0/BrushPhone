@@ -1,7 +1,7 @@
 #ifndef USERLISTVIEWITEM_H
 #define USERLISTVIEWITEM_H
 
-#include "backgroundframe.h"
+#include "UI/Components/Frames/backgroundframe.h"
 #include "customlabel.h"
 
 class UserListViewItem : public BackgroundFrame {

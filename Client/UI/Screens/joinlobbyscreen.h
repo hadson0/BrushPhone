@@ -4,9 +4,9 @@
 #include <QMessageBox>
 
 #include "screen.h"
-#include "UI/Components/customlabel.h"
-#include "UI/Components/custompushbutton.h"
-#include "UI/Components/customlineedit.h"
+#include "UI/Components/Widgets/customlabel.h"
+#include "UI/Components/Widgets/custompushbutton.h"
+#include "UI/Components/Widgets/customlineedit.h"
 #include "UI/Components/nickinputdialog.h"
 
 class JoinLobbyScreen : public Screen {

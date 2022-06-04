@@ -4,8 +4,8 @@
 #include <QFile>
 
 #include "backgroundframe.h"
-#include "UI/Components/customtextedit.h"
-#include "UI/Components/custompushbutton.h"
+#include "UI/Components/Widgets/customtextedit.h"
+#include "UI/Components/Widgets/custompushbutton.h"
 
 class ChatFrame : public BackgroundFrame {
     Q_OBJECT

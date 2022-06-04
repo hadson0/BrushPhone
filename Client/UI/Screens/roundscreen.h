@@ -2,8 +2,8 @@
 #define ROUNDSCREEN_H
 
 #include "UI/Screens/screen.h"
-#include "UI/Components/roundframe.h"
-#include "UI/Components/custompushbutton.h"
+#include "UI/Components/Frames/roundframe.h"
+#include "UI/Components/Widgets/custompushbutton.h"
 
 class RoundScreen : public Screen {
     Q_OBJECT

@@ -2,8 +2,8 @@
 #define DRAWINGSCREEN_H
 
 #include "UI/Screens/screen.h"
-#include "UI/Components/drawingframe.h"
-#include "UI/Components/timerwidget.h"
+#include "UI/Components/Frames/drawingframe.h"
+#include "UI/Components/Widgets/timerwidget.h"
 
 class DrawingScreen : public Screen {
     Q_OBJECT

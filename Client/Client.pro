@@ -9,20 +9,20 @@ SOURCES += \
     Controllers/clientmanager.cpp \
     Controllers/messageprocesshandler.cpp \
     Controllers/websockethandler.cpp \
-    UI/Components/backgroundframe.cpp \
-    UI/Components/canvas.cpp \
-    UI/Components/chatframe.cpp \
-    UI/Components/customlabel.cpp \
-    UI/Components/customlineedit.cpp \
-    UI/Components/custompushbutton.cpp \
-    UI/Components/customtextedit.cpp \
-    UI/Components/drawingframe.cpp \
-    UI/Components/roundframe.cpp \
-    UI/Components/sentenceframe.cpp \
+    UI/Components/Frames/backgroundframe.cpp \
+    UI/Components/Widgets/canvas.cpp \
+    UI/Components/Frames/chatframe.cpp \
+    UI/Components/Widgets/customlabel.cpp \
+    UI/Components/Widgets/customlineedit.cpp \
+    UI/Components/Widgets/custompushbutton.cpp \
+    UI/Components/Widgets/customtextedit.cpp \
+    UI/Components/Frames/drawingframe.cpp \
+    UI/Components/Frames/roundframe.cpp \
+    UI/Components/Frames/sentenceframe.cpp \
     UI/Components/nickinputdialog.cpp \
-    UI/Components/timerwidget.cpp \
-    UI/Components/userlistviewitem.cpp \
-    UI/Components/userlistview.cpp \
+    UI/Components/Widgets/timerwidget.cpp \
+    UI/Components/Widgets/userlistviewitem.cpp \
+    UI/Components/Frames/userlistview.cpp \
     UI/Screens/drawingscreen.cpp \
     UI/Screens/sentencescreen.cpp \
     UI/Screens/joinlobbyscreen.cpp \
@@ -39,20 +39,20 @@ HEADERS += \
     Controllers/clientmanager.h \
     Controllers/messageprocesshandler.h \
     Controllers/websockethandler.h \
-    UI/Components/backgroundframe.h \
-    UI/Components/canvas.h \
-    UI/Components/chatframe.h \
-    UI/Components/customlabel.h \
-    UI/Components/customlineedit.h \
-    UI/Components/custompushbutton.h \
-    UI/Components/customtextedit.h \
-    UI/Components/drawingframe.h \
-    UI/Components/roundframe.h \
-    UI/Components/sentenceframe.h \
+    UI/Components/Frames/backgroundframe.h \
+    UI/Components/Widgets/canvas.h \
+    UI/Components/Frames/chatframe.h \
+    UI/Components/Widgets/customlabel.h \
+    UI/Components/Widgets/customlineedit.h \
+    UI/Components/Widgets/custompushbutton.h \
+    UI/Components/Widgets/customtextedit.h \
+    UI/Components/Frames/drawingframe.h \
+    UI/Components/Frames/roundframe.h \
+    UI/Components/Frames/sentenceframe.h \
     UI/Components/nickinputdialog.h \
-    UI/Components/timerwidget.h \
-    UI/Components/userlistviewitem.h \
-    UI/Components/userlistview.h \
+    UI/Components/Widgets/timerwidget.h \
+    UI/Components/Widgets/userlistviewitem.h \
+    UI/Components/Frames/userlistview.h \
     UI/Screens/drawingscreen.h \
     UI/Screens/sentencescreen.h \
     UI/Screens/joinlobbyscreen.h \

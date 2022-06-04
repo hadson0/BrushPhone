@@ -6,8 +6,8 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 
-#include "UI/Components/customlineedit.h"
-#include "UI/Components/customlabel.h"
+#include "Widgets/customlineedit.h"
+#include "Widgets/customlabel.h"
 
 class NickInputDialog : public QDialog {
     Q_OBJECT

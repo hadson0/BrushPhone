@@ -7,8 +7,8 @@
 #include <QDebug>
 
 #include "backgroundframe.h"
-#include "UI/Components/customlabel.h"
-#include "UI/Components/custompushbutton.h"
+#include "UI/Components/Widgets/customlabel.h"
+#include "UI/Components/Widgets/custompushbutton.h"
 
 class RoundFrame : public BackgroundFrame {
     Q_OBJECT

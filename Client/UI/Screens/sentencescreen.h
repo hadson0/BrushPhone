@@ -2,8 +2,8 @@
 #define SENTENCESCREEN_H
 
 #include "UI/Screens/screen.h"
-#include "UI/Components/sentenceframe.h"
-#include "UI/Components/timerwidget.h"
+#include "UI/Components/Frames/sentenceframe.h"
+#include "UI/Components/Widgets/timerwidget.h"
 
 class SentenceScreen : public Screen {
     Q_OBJECT

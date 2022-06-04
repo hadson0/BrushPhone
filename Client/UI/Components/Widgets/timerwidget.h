@@ -5,8 +5,8 @@
 #include <QTimer>
 #include <QTime>
 
-#include "backgroundframe.h"
-#include "UI/Components/customlabel.h"
+#include "UI/Components/Frames/backgroundframe.h"
+#include "UI/Components/Widgets/customlabel.h"
 
 class TimerWidget : public BackgroundFrame {
     Q_OBJECT

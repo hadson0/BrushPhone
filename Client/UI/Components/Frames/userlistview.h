@@ -1,8 +1,8 @@
 #ifndef CLIENTLISTVIEW_H
 #define CLIENTLISTVIEW_H
 
-#include "backgroundframe.h"
-#include "userlistviewitem.h"
+#include "UI/Components/Frames/backgroundframe.h"
+#include "UI/Components/Widgets/userlistviewitem.h"
 
 class UserListView : public BackgroundFrame {
     Q_OBJECT

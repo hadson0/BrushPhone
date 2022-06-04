@@ -4,12 +4,12 @@
 #include <QMessageBox>
 
 #include "screen.h"
-#include "UI/Components/userlistview.h"
-#include "UI/Components/chatframe.h"
-#include "UI/Components/customlabel.h"
-#include "UI/Components/custompushbutton.h"
-#include "UI/Components/timerwidget.h"
-#include "UI/Components/sentenceframe.h"
+#include "UI/Components/Frames/userlistview.h"
+#include "UI/Components/Frames/chatframe.h"
+#include "UI/Components/Widgets/customlabel.h"
+#include "UI/Components/Widgets/custompushbutton.h"
+#include "UI/Components/Widgets/timerwidget.h"
+#include "UI/Components/Frames/sentenceframe.h"
 
 class LobbyScreen : public Screen {
     Q_OBJECT

@@ -6,9 +6,9 @@
 #include <QTemporaryFile>
 
 #include "backgroundframe.h"
-#include "UI/Components/custompushbutton.h"
-#include "UI/Components/customlineedit.h"
-#include "UI/Components/customlabel.h"
+#include "UI/Components/Widgets/custompushbutton.h"
+#include "UI/Components/Widgets/customlineedit.h"
+#include "UI/Components/Widgets/customlabel.h"
 
 class SentenceFrame : public BackgroundFrame {
     Q_OBJECT
