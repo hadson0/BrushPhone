@@ -29,7 +29,6 @@ class Canvas : public QWidget {
     void mouseMoveEvent(QMouseEvent *event);
 
     void draw();
-    void updateImage(QImage *image, const QSize &newSize);
 
 public:
     explicit Canvas(QWidget *parent = nullptr);
@@ -40,7 +39,7 @@ public:
     QColor getPenColor() const;
     int getPenWidth() const;
 
-    void saveImage();
+    bool saveImage();
 
 public slots:
     void clearImage();

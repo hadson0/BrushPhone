@@ -56,17 +56,6 @@ void Canvas::draw() {
     this->update();
 }
 
-void Canvas::updateImage(QImage *image, const QSize &newSize) {
-    if (image->size() != newSize) {
-        QPainter pantier(image);
-        QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
-        newImage.fill(backgroundColor); // Otherwise the background would be transparent
-
-        pantier.drawImage(QPoint(0, 0), *image);
-        *image = newImage;
-    }
-}
-
 void Canvas::setPenColor(QColor &color) { penColor = color; }
 
 void Canvas::setPenWidth(int width) { penWidth = width; }
@@ -80,7 +69,7 @@ void Canvas::clearImage() {
     update();
 }
 
-void Canvas::saveImage() {
+bool Canvas::saveImage() {
     QImage drawing = image;
     QTemporaryFile file("tempXXXXXX.png");
     if (file.open()) {
@@ -89,10 +78,11 @@ void Canvas::saveImage() {
         QByteArray drawingData = file.readAll();
         file.write(drawingData);
 
-        updateImage(&drawing, size());
+        drawing = QImage(this->size(),  QImage::Format_ARGB32);
 
         emit sendDrawing(drawingData.toHex());
+        return true;
     } else {
-        qDebug() << "Error";
+        return false;
     }
 }

@@ -30,6 +30,7 @@ public slots:
 
 signals:
     void sendDrawing(QString drawingData);
+    void error(QString errorCode);
 };
 
 #endif // DRAWINGFRAME_H

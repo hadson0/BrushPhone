@@ -29,7 +29,9 @@ DrawingFrame::DrawingFrame(QString sentence, QWidget *parent)
 }
 
 void DrawingFrame::onDoneButtonClicked() {
-    canvas->saveImage();
+    if (!canvas->saveImage()) {
+        emit error("fileError");
+    }
 }
 
 void DrawingFrame::setPenWidth() {

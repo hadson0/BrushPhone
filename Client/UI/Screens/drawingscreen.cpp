@@ -8,6 +8,7 @@ DrawingScreen::DrawingScreen(QString sentence, QWidget *parent)
     // Game sentence frame
     gameDrawing = new DrawingFrame(sentence, this);
     connect(gameDrawing, &DrawingFrame::sendDrawing, this, &DrawingScreen::sendDrawing);
+    connect(gameDrawing, &DrawingFrame::error, this, &Screen::error);
 
     // Timer
     timer = new TimerWidget(180, this);
