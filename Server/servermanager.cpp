@@ -180,15 +180,15 @@ void ClientManager::onClientDisconnected(QString clientID) {
         lobby->removeUser(clientID);
         clientLobbyMap.remove(clientID);
 
+
         QStringList clientList = lobby->getClientList();
 
         if (lobby->isGameOn()) {
             webSocketHandler->sendTextMessage("type:error;payLoad:userDisconnected", clientList);
-            deleteLobby(lobby->getID());
             qDebug() << "Lobby deleted";
         }
 
-        if (clientList.isEmpty()) {
+        else if (clientList.isEmpty()) {
             deleteLobby(lobby->getID());
             qDebug() << "Lobby deleted";
         }
