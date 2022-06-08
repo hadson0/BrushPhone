@@ -9,7 +9,10 @@ void Game::startGame(QStringList &userList) {
     stories.resize(numbUsers);
     for (qsizetype i = 0; i < numbUsers; i++) {
         stories[i].resize(numbUsers / 2);
-        stories[i].fill({"", ""}); // Clears the vector
+        // Clears the vector
+        for (qsizetype j = 0; j < numbUsers / 2; j++) {
+            stories[i][j] = {QString(), QString()};
+        }
     }
 
     int count = 0;
@@ -79,7 +82,7 @@ void Game::setSentence(QString userNick, QString sentence) {
         stories[storyIndex][roundIndex].first = sentence;
 
         bool allDone = true;
-        for (qsizetype i = 0; i < stories.size(); i++) {
+        for (std::size_t i = 0; i < stories.size(); i++) {
             if (stories[i][roundIndex].first.isEmpty()) {
                 allDone = false;
             }
@@ -100,7 +103,7 @@ void Game::setDrawing(QString userNick, QString drawingData) {
         stories[storyIndex][roundIndex].second = drawingData;
 
         bool allDone = true;
-        for (qsizetype i = 0; i < stories.size(); i++) {
+        for (std::size_t i = 0; i < stories.size(); i++) {
             if (stories[i][roundIndex].second.isEmpty()) {
                 allDone = false;
             }

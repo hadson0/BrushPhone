@@ -3,18 +3,19 @@
 
 #include <QObject>
 #include <QMap>
-#include <QVector>
 #include <QPair>
 #include <QDebug>
 
+#include <vector>
+
 typedef QPair<QString, QString> Round; // <sentence, drawing>
-typedef QVector<Round> Story;
+typedef std::vector<Round> Story;
 
 class Game : public QObject {
     Q_OBJECT
 
     int gamePhase; // even = write, odd = draw
-    QVector<Story> stories;
+    std::vector<Story> stories;
     QMap<QString, int> roundMap; // <userNick, storyIndex>
 
 public:
