@@ -3,7 +3,7 @@
 
 #include "UI/Screens/screen.h"
 #include "UI/Components/Frames/sentenceframe.h"
-#include "UI/Components/Widgets/timerwidget.h"
+#include "UI/Components/Frames/timerframe.h"
 
 class SentenceScreen : public Screen {
     Q_OBJECT
@@ -12,7 +12,7 @@ class SentenceScreen : public Screen {
     SentenceFrame *gameSentence;
 
     // Widgets
-    TimerWidget *timer;
+    TimerFrame *timer;
 
     void recalculateGeometry();
     void resizeEvent(QResizeEvent *event);

@@ -11,9 +11,9 @@ DrawingScreen::DrawingScreen(QString sentence, QWidget *parent)
     connect(gameDrawing, &DrawingFrame::error, this, &Screen::error);
 
     // Timer
-    timer = new TimerWidget(180, this);
+    timer = new TimerFrame(180, this);
     timer->start();
-    connect(timer, &TimerWidget::isOver, gameDrawing, &DrawingFrame::onDoneButtonClicked);
+    connect(timer, &TimerFrame::isOver, gameDrawing, &DrawingFrame::onDoneButtonClicked);
 }
 
 void DrawingScreen::recalculateGeometry() {

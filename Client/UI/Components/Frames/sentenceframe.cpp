@@ -1,7 +1,7 @@
 #include "sentenceframe.h"
 
 SentenceFrame::SentenceFrame(QString drawingData, QWidget *parent)
-    : BackgroundFrame{parent}, hasDrawing(false) {
+    : BackgroundedFrame{parent}, hasDrawing(false) {
     setPadding(10);
     setSpacing(10);
 

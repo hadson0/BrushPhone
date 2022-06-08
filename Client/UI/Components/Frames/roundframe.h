@@ -6,11 +6,11 @@
 #include <QTemporaryFile>
 #include <QDebug>
 
-#include "backgroundframe.h"
+#include "backgroundedframe.h"
 #include "UI/Components/Widgets/customlabel.h"
 #include "UI/Components/Widgets/custompushbutton.h"
 
-class RoundFrame : public BackgroundFrame {
+class RoundFrame : public BackgroundedFrame {
     Q_OBJECT
 
     // Widgets

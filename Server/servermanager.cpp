@@ -1,35 +1,35 @@
 #include "servermanager.h"
 
-ClientManager::ClientManager(QObject *parent)
+ServerManager::ServerManager(QObject *parent)
     : QObject{parent} {
     webSocketHandler = WebSocketHandler::getInstance(this);
     messageProcessorHandler = new MessageProcessHandler(this);
 
     //Coneccts signals and slots
     connect(webSocketHandler, &WebSocketHandler::newMessageToProcess, messageProcessorHandler, &MessageProcessHandler::processSocketMessage);
-    connect(webSocketHandler, &WebSocketHandler::clientDisconnected, this, &ClientManager::onClientDisconnected);
+    connect(webSocketHandler, &WebSocketHandler::clientDisconnected, this, &ServerManager::onClientDisconnected);
 
-    connect(messageProcessorHandler, &MessageProcessHandler::toggleReadyRequest, this, &ClientManager::toggleReadyRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::createLobbyRequest, this, &ClientManager::createLobbyRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::joinLobbyRequest, this, &ClientManager::joinLobbyRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::quitLobbyRequest, this, &ClientManager::quitLobbyRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::messageLobbyRequest, this, &ClientManager::lobbyMessageRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::toggleReadyRequest, this, &ServerManager::toggleReadyRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::createLobbyRequest, this, &ServerManager::createLobbyRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::joinLobbyRequest, this, &ServerManager::joinLobbyRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::quitLobbyRequest, this, &ServerManager::quitLobbyRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::messageLobbyRequest, this, &ServerManager::lobbyMessageRequest);
 
-    connect(messageProcessorHandler, &MessageProcessHandler::setDrawingRequest, this, &ClientManager::setDrawingRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::setSentenceRequest, this, &ClientManager::setSentenceRequest);
-    connect(messageProcessorHandler, &MessageProcessHandler::getRoundRequest, this, &ClientManager::getRoundRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::setDrawingRequest, this, &ServerManager::setDrawingRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::setSentenceRequest, this, &ServerManager::setSentenceRequest);
+    connect(messageProcessorHandler, &MessageProcessHandler::getRoundRequest, this, &ServerManager::getRoundRequest);
 
 }
 
 // Generates a QString composed of 4 random numbers. Ex.: "1234"
-QString ClientManager::generateRandomID() {
+QString ServerManager::generateRandomID() {
     std::random_device rd;
     std:: default_random_engine generator(rd());
     std::uniform_int_distribution<int> idGenerator(1000, 9999);
     return QString::number(idGenerator(generator));
 }
 
-void ClientManager::deleteLobby(QString lobbyID) {
+void ServerManager::deleteLobby(QString lobbyID) {
     // Checks if the lobby is registered
     if (lobbyMap.contains(lobbyID)) {
         Lobby *lobby = lobbyMap[lobbyID];
@@ -38,7 +38,7 @@ void ClientManager::deleteLobby(QString lobbyID) {
     }
 }
 
-void ClientManager::createLobbyRequest(QString clientID, QString nickname) {
+void ServerManager::createLobbyRequest(QString clientID, QString nickname) {
     QString newLobbyID = generateRandomID();
 
     // Make surte that the generated ID is unique
@@ -47,18 +47,18 @@ void ClientManager::createLobbyRequest(QString clientID, QString nickname) {
 
     // Registers the new lobby
     Lobby *newLobby = new Lobby(newLobbyID, this);
-    connect(newLobby, &Lobby::userListChanged, this, &ClientManager::onUserListChanged);
-    connect(newLobby, &Lobby::readyListChanged, this, &ClientManager::onReadyListChanged);
+    connect(newLobby, &Lobby::userListChanged, this, &ServerManager::onUserListChanged);
+    connect(newLobby, &Lobby::readyListChanged, this, &ServerManager::onReadyListChanged);
 
-    connect(newLobby, &Lobby::gameStarted, this, &ClientManager::onGameStarted);
-    connect(newLobby, &Lobby::drawingRequest, this, &ClientManager::onDrawingRequest);
-    connect(newLobby, &Lobby::sentenceRequest, this, &ClientManager::onSentenceRequest);
-    connect(newLobby, &Lobby::displayRoundRequest, this, &ClientManager::onDisplayRoundRequest);
-    connect(newLobby, &Lobby::finalLobby, this, &ClientManager::onFinalLobby);
+    connect(newLobby, &Lobby::gameStarted, this, &ServerManager::onGameStarted);
+    connect(newLobby, &Lobby::drawingRequest, this, &ServerManager::onDrawingRequest);
+    connect(newLobby, &Lobby::sentenceRequest, this, &ServerManager::onSentenceRequest);
+    connect(newLobby, &Lobby::displayRoundRequest, this, &ServerManager::onDisplayRoundRequest);
+    connect(newLobby, &Lobby::finalLobby, this, &ServerManager::onFinalLobby);
 
-    connect(this, &ClientManager::setDrawingRequest, newLobby, &Lobby::setDrawingRequest);
-    connect(this, &ClientManager::setSentenceRequest, newLobby, &Lobby::setSentenceRequest);
-    connect(this, &ClientManager::getRoundRequest, newLobby, &Lobby::getGameRound);
+    connect(this, &ServerManager::setDrawingRequest, newLobby, &Lobby::setDrawingRequest);
+    connect(this, &ServerManager::setSentenceRequest, newLobby, &Lobby::setSentenceRequest);
+    connect(this, &ServerManager::getRoundRequest, newLobby, &Lobby::getGameRound);
 
     newLobby->addUser(clientID, nickname);
     lobbyMap[newLobbyID] = newLobby;
@@ -70,7 +70,7 @@ void ClientManager::createLobbyRequest(QString clientID, QString nickname) {
     qDebug() << "New Lobby created, ID: " << newLobbyID;
 }
 
-void ClientManager::joinLobbyRequest(QString lobbyID, QString clientID, QString nickname) {
+void ServerManager::joinLobbyRequest(QString lobbyID, QString clientID, QString nickname) {
     if (lobbyMap.contains(lobbyID)) {
         if (!lobbyMap[lobbyID]->containsNickname(nickname)) {
             Lobby *lobby = lobbyMap[lobbyID];
@@ -89,7 +89,7 @@ void ClientManager::joinLobbyRequest(QString lobbyID, QString clientID, QString 
     }
 }
 
-void ClientManager::quitLobbyRequest(QString lobbyID, QString clientID) {
+void ServerManager::quitLobbyRequest(QString lobbyID, QString clientID) {
     // Checks if the lobby is registered
     if (lobbyMap.contains(lobbyID)) {
         Lobby *lobby = lobbyMap[lobbyID];
@@ -101,7 +101,7 @@ void ClientManager::quitLobbyRequest(QString lobbyID, QString clientID) {
     }
 }
 
-void ClientManager::lobbyMessageRequest(QString message, QString lobbyID, QString clientID) {
+void ServerManager::lobbyMessageRequest(QString message, QString lobbyID, QString clientID) {
     // Checks if the lobby is registered
     if (lobbyMap.contains(lobbyID)) {
         Lobby *lobby = lobbyMap[lobbyID];
@@ -116,7 +116,7 @@ void ClientManager::lobbyMessageRequest(QString message, QString lobbyID, QStrin
     }
 }
 
-void ClientManager::toggleReadyRequest(QString lobbyID, QString clientID) {
+void ServerManager::toggleReadyRequest(QString lobbyID, QString clientID) {
     // Checks if the lobby is registered
     if (lobbyMap.contains(lobbyID)) {
         Lobby *lobby = lobbyMap[lobbyID];
@@ -124,7 +124,7 @@ void ClientManager::toggleReadyRequest(QString lobbyID, QString clientID) {
     }
 }
 
-void ClientManager::onUserListChanged(QString userList, QStringList &clientList) {
+void ServerManager::onUserListChanged(QString userList, QStringList &clientList) {
     // If there is clients in lobby
     if (!userList.isEmpty() && !clientList.isEmpty()) {
         // Update the user list to all the clients in the lobby
@@ -142,37 +142,37 @@ void ClientManager::onUserListChanged(QString userList, QStringList &clientList)
     }
 }
 
-void ClientManager::onReadyListChanged(QString readyUSers, QStringList &clientList) {
+void ServerManager::onReadyListChanged(QString readyUSers, QStringList &clientList) {
     // Update the ready user list to all the clients in the lobby
     webSocketHandler->sendTextMessage("type:updatedReadyUserList;payLoad:0;userList:" + readyUSers, clientList);
 }
 
-void ClientManager::onGameStarted(QStringList &clientList) {
+void ServerManager::onGameStarted(QStringList &clientList) {
     // Informs all clients that the game started
     webSocketHandler->sendTextMessage("type:gameStarted;payLoad:0", clientList);
 }
 
-void ClientManager::onSentenceRequest(QString clientID, QString drawingData) {
+void ServerManager::onSentenceRequest(QString clientID, QString drawingData) {
     // Pass a drawing to the client and asks to describe it
     webSocketHandler->sendTextMessage("type:describeDrawing;payLoad:" + drawingData, clientID);
 }
 
-void ClientManager::onDrawingRequest(QString clientID, QString sentence) {
+void ServerManager::onDrawingRequest(QString clientID, QString sentence) {
     // Pass a sentence to the client and asks to draw it
     webSocketHandler->sendTextMessage("type:drawSentence;payLoad:" + sentence, clientID);
 }
 
-void ClientManager::onDisplayRoundRequest(QString sentence, QString drawingData, QStringList &clientList) {
+void ServerManager::onDisplayRoundRequest(QString sentence, QString drawingData, QStringList &clientList) {
     // Informs all clients to display the round
     webSocketHandler->sendTextMessage("type:displayRound;sentence:" + sentence + ";drawingData:" + drawingData, clientList);
 }
 
-void ClientManager::onFinalLobby(QString userList, QStringList &clientList) {
+void ServerManager::onFinalLobby(QString userList, QStringList &clientList) {
     // Informs all clients to display the final lobby
     webSocketHandler->sendTextMessage("type:finalLobby;payLoad:0;userList:" + userList, clientList);
 }
 
-void ClientManager::onClientDisconnected(QString clientID) {
+void ServerManager::onClientDisconnected(QString clientID) {
     if (clientLobbyMap.contains(clientID)) { // If the client was in a lobby
         Lobby *lobby = clientLobbyMap[clientID];
 
@@ -185,7 +185,6 @@ void ClientManager::onClientDisconnected(QString clientID) {
 
         if (lobby->isGameOn()) {
             webSocketHandler->sendTextMessage("type:error;payLoad:userDisconnected", clientList);
-            qDebug() << "Lobby deleted";
         }
 
         else if (clientList.isEmpty()) {

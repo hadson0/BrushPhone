@@ -1,14 +1,14 @@
-#ifndef TIMERWIDGET_H
-#define TIMERWIDGET_H
+#ifndef TIMERFRAME_H
+#define TIMERFRAME_H
 
 #include <QWidget>
 #include <QTimer>
 #include <QTime>
 
-#include "UI/Components/Frames/backgroundframe.h"
+#include "UI/Components/Frames/backgroundedframe.h"
 #include "UI/Components/Widgets/customlabel.h"
 
-class TimerWidget : public BackgroundFrame {
+class TimerFrame : public BackgroundedFrame {
     Q_OBJECT
 
     QTimer *timer;
@@ -18,7 +18,7 @@ class TimerWidget : public BackgroundFrame {
     void resizeEvent(QResizeEvent *event);
 
 public:
-    explicit TimerWidget(int seconds, QWidget *parent = nullptr);
+    explicit TimerFrame(int seconds, QWidget *parent = nullptr);
 
     void start();
 
@@ -29,4 +29,4 @@ signals:
     void isOver();
 };
 
-#endif // TIMERWIDGET_H
+#endif // TIMERFRAME_H

@@ -3,11 +3,11 @@
 
 #include <QFile>
 
-#include "backgroundframe.h"
+#include "backgroundedframe.h"
 #include "UI/Components/Widgets/customtextedit.h"
 #include "UI/Components/Widgets/custompushbutton.h"
 
-class ChatFrame : public BackgroundFrame {
+class ChatFrame : public BackgroundedFrame {
     Q_OBJECT
 
     // Widgets

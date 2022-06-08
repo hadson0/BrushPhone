@@ -1,7 +1,7 @@
-#include "timerwidget.h"
+#include "timerframe.h"
 
-TimerWidget::TimerWidget(int seconds, QWidget *parent)
-    : BackgroundFrame{parent}, seconds(seconds) {
+TimerFrame::TimerFrame(int seconds, QWidget *parent)
+    : BackgroundedFrame{parent}, seconds(seconds) {
     setPadding(10);
 
     // Label
@@ -9,15 +9,15 @@ TimerWidget::TimerWidget(int seconds, QWidget *parent)
 
     // Timer
     timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &TimerWidget::updateTimer);
+    connect(timer, &QTimer::timeout, this, &TimerFrame::updateTimer);
 }
 
-void TimerWidget::start() {
+void TimerFrame::start() {
     timer->stop();
     timer->start(1000);
 }
 
-void TimerWidget::resizeEvent(QResizeEvent *event) {
+void TimerFrame::resizeEvent(QResizeEvent *event) {
     Q_UNUSED(event);
 
     // Label
@@ -26,7 +26,7 @@ void TimerWidget::resizeEvent(QResizeEvent *event) {
     label->setGeometry(labelX, labelY, labelWidth, labelHeight);
 }
 
-void TimerWidget::updateTimer() {
+void TimerFrame::updateTimer() {
     if (seconds != 0) {
         seconds--;
         label->setText(QString::number(seconds) + "s");

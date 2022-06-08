@@ -1,7 +1,7 @@
 #include "roundframe.h"
 
 RoundFrame::RoundFrame(QString sentence, QString drawingData, QWidget *parent)
-    : BackgroundFrame{parent} {
+    : BackgroundedFrame{parent} {
     // Sentence label
     sentenceLabel = new CustomLabel(sentence, this);
 

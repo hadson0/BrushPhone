@@ -6,9 +6,9 @@ SentenceScreen::SentenceScreen(QString drawingData, QWidget *parent)
     setSpacing(10);
 
     // Timer
-    timer = new TimerWidget(60, this);
+    timer = new TimerFrame(60, this);
     timer->start();
-    connect(timer, &TimerWidget::isOver, this, &SentenceScreen::done);
+    connect(timer, &TimerFrame::isOver, this, &SentenceScreen::done);
 
     // Game sentence frame
     gameSentence = new SentenceFrame(drawingData, this);

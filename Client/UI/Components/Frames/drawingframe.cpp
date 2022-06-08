@@ -1,7 +1,7 @@
 #include "drawingframe.h"
 
 DrawingFrame::DrawingFrame(QString sentence, QWidget *parent)
-    : BackgroundFrame{parent} {
+    : BackgroundedFrame{parent} {
     setPadding(20);
 
     // Label

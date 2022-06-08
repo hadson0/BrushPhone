@@ -10,7 +10,7 @@
 #include "messageprocesshandler.h"
 #include "lobby.h"
 
-class ClientManager : public QObject {
+class ServerManager : public QObject {
     Q_OBJECT
 
     QMap<QString, Lobby*> lobbyMap;
@@ -19,16 +19,16 @@ class ClientManager : public QObject {
     WebSocketHandler *webSocketHandler;
     MessageProcessHandler *messageProcessorHandler;
 
-    ClientManager(QObject *parent = nullptr);
+    ServerManager(QObject *parent = nullptr);
 
 public:
-    ClientManager(const ClientManager &obj) = delete;
-    ClientManager(ClientManager &&obj) = delete;
-    ClientManager operator=(ClientManager &obj) = delete;
-    ClientManager operator=(ClientManager &&obj) = delete;
+    ServerManager(const ServerManager &obj) = delete;
+    ServerManager(ServerManager &&obj) = delete;
+    ServerManager operator=(ServerManager &obj) = delete;
+    ServerManager operator=(ServerManager &&obj) = delete;
 
-    static ClientManager& getInstance() {
-        static ClientManager instance;
+    static ServerManager& getInstance() {
+        static ServerManager instance;
         return instance;
     }
 

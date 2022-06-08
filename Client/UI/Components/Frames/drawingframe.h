@@ -4,12 +4,12 @@
 #include <QInputDialog>
 #include <QColorDialog>
 
-#include "backgroundframe.h"
+#include "backgroundedframe.h"
 #include "UI/Components/Widgets/custompushbutton.h"
 #include "UI/Components/Widgets/customlabel.h"
 #include "UI/Components/Widgets/canvas.h"
 
-class DrawingFrame : public BackgroundFrame {
+class DrawingFrame : public BackgroundedFrame {
     Q_OBJECT
 
     // Widgets

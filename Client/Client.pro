@@ -9,7 +9,7 @@ SOURCES += \
     Controllers/clientmanager.cpp \
     Controllers/messageprocesshandler.cpp \
     Controllers/websockethandler.cpp \
-    UI/Components/Frames/backgroundframe.cpp \
+    UI/Components/Frames/backgroundedframe.cpp \
     UI/Components/Widgets/canvas.cpp \
     UI/Components/Frames/chatframe.cpp \
     UI/Components/Widgets/customlabel.cpp \
@@ -19,8 +19,8 @@ SOURCES += \
     UI/Components/Frames/drawingframe.cpp \
     UI/Components/Frames/roundframe.cpp \
     UI/Components/Frames/sentenceframe.cpp \
+    UI/Components/Frames/timerframe.cpp \
     UI/Components/nickinputdialog.cpp \
-    UI/Components/Widgets/timerwidget.cpp \
     UI/Components/Widgets/userlistviewitem.cpp \
     UI/Components/Frames/userlistview.cpp \
     UI/Screens/drawingscreen.cpp \
@@ -39,7 +39,7 @@ HEADERS += \
     Controllers/clientmanager.h \
     Controllers/messageprocesshandler.h \
     Controllers/websockethandler.h \
-    UI/Components/Frames/backgroundframe.h \
+    UI/Components/Frames/backgroundedframe.h \
     UI/Components/Widgets/canvas.h \
     UI/Components/Frames/chatframe.h \
     UI/Components/Widgets/customlabel.h \
@@ -49,8 +49,8 @@ HEADERS += \
     UI/Components/Frames/drawingframe.h \
     UI/Components/Frames/roundframe.h \
     UI/Components/Frames/sentenceframe.h \
+    UI/Components/Frames/timerframe.h \
     UI/Components/nickinputdialog.h \
-    UI/Components/Widgets/timerwidget.h \
     UI/Components/Widgets/userlistviewitem.h \
     UI/Components/Frames/userlistview.h \
     UI/Screens/drawingscreen.h \

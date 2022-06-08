@@ -1,7 +1,7 @@
 #include "userlistview.h"
 
 UserListView::UserListView(QWidget *parent)
-    : BackgroundFrame{parent} {
+    : BackgroundedFrame{parent} {
     setPadding(10);
 }
 

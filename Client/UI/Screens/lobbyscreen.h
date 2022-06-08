@@ -8,7 +8,7 @@
 #include "UI/Components/Frames/chatframe.h"
 #include "UI/Components/Widgets/customlabel.h"
 #include "UI/Components/Widgets/custompushbutton.h"
-#include "UI/Components/Widgets/timerwidget.h"
+#include "UI/Components/Frames/timerframe.h"
 #include "UI/Components/Frames/sentenceframe.h"
 
 class LobbyScreen : public Screen {

@@ -5,12 +5,12 @@
 #include <QLabel>
 #include <QTemporaryFile>
 
-#include "backgroundframe.h"
+#include "backgroundedframe.h"
 #include "UI/Components/Widgets/custompushbutton.h"
 #include "UI/Components/Widgets/customlineedit.h"
 #include "UI/Components/Widgets/customlabel.h"
 
-class SentenceFrame : public BackgroundFrame {
+class SentenceFrame : public BackgroundedFrame {
     Q_OBJECT
 
     // Widgets
