@@ -10,6 +10,7 @@
 
 #include "Controllers/messageprocesshandler.h"
 #include "UI/Components/nickinputdialog.h"
+#include "Controllers/websockethandler.h"
 
 class ClientManager : public QObject {
     Q_OBJECT
@@ -18,6 +19,7 @@ class ClientManager : public QObject {
     QString lobbyID, nickname;
 
     MessageProcessHandler *messageProcessHandler;
+    WebSocketHandler *webSocketHandler;
 
     static ClientManager *instance;
     ClientManager(QObject *parent = nullptr);
@@ -48,6 +50,9 @@ public slots:
     void setClientID(QString clientID);
     void setLobbyID(QString lobbyID);
 
+    void connectToServer();
+    void closeConnection();
+
     // Methods   
     void createLobbyRequest();    
     void joinLobbyRequested(QString lobbyID);
@@ -70,8 +75,8 @@ signals:
     void processSocketMessage(QString message);
     void processScreenMessage(QString message);
 
-    void connectToServerRequest();
     void clientConnected();
+    void clientDisconnected();
 
     void lobbyJoined(QString newLobbyID);
     void lobbyLeft();

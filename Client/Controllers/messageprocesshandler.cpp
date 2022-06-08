@@ -156,11 +156,6 @@ void MessageProcessHandler::processScreenMessage(QString message) {
     QString type = getMessageData(message, "type");
     QString newLobbyID, lobbyMessage;
 
-    // type:connectToServerRequest;payLoad:0
-    if (type == "connectToServerRequest") {
-            emit connectToServerRequest();
-    }
-
     // type:createLobbyRequest;payload:0
     if (type == "createLobbyRequest") {
         emit createLobbyRequest();

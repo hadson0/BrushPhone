@@ -6,18 +6,13 @@ MainWindow::MainWindow(QWidget *parent)
     gameScreen = nullptr;
 
     // Maintains window aspect ratio
-    QSizePolicy sizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+    QSizePolicy sizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred); // Not working
     sizePolicy.setHeightForWidth(true);
-    setSizePolicy(sizePolicy);
-
-    // Creates a Web Socket Handler
-    webSocketHandler = WebSocketHandler::getInstance(this);
-    connect(webSocketHandler, &WebSocketHandler::connectionError, this, &MainWindow::onClientDisconnected);
+    setSizePolicy(sizePolicy);   
 
     // Creates a game manager and connects it to the Web Socket Handler
-    clientManager = ClientManager::getInstance(this);
-    connect(webSocketHandler, &WebSocketHandler::newMessageReadyForProcessing, clientManager, &ClientManager::processSocketMessage);
-    connect(clientManager, &ClientManager::newMessageReadyToSend, webSocketHandler, &WebSocketHandler::sendMessageToServer);
+    clientManager = ClientManager::getInstance(this);    
+    connect(clientManager, &ClientManager::clientDisconnected, this, &MainWindow::onClientDisconnected);
     connect(clientManager, &ClientManager::clientConnected, this, &MainWindow::onClientConnected);
     connect(clientManager, &ClientManager::error, this, &MainWindow::onErrorOccurrence);
     connect(clientManager, &ClientManager::lobbyLeft, this, &MainWindow::onBackRequested);
@@ -47,7 +42,8 @@ void MainWindow::displayMenuScreen(QString destinationMenuScreen) {
 
     if (destinationMenuScreen == "MainMenuScreen") {
         newScreen = new MainMenuScreen(this);
-        connect(qobject_cast<MainMenuScreen *>(newScreen), &MainMenuScreen::connectToTheServerRequest, this, &MainWindow::onConnectToServerRequest);
+        connect(qobject_cast<MainMenuScreen *>(newScreen), &MainMenuScreen::connectToTheServerRequest,
+                clientManager, &ClientManager::connectToServer);
     } else if (destinationMenuScreen == "SelectionScreen") {
         newScreen = new SelectionScreen(this);
     } else if (destinationMenuScreen == "JoinLobbyScreen") {
@@ -177,7 +173,7 @@ void MainWindow::closeAllScreens() {
         menuScreenStack.pop();
     }
 
-    webSocketHandler->close();
+    clientManager->closeConnection();
     this->displayMenuScreen("MainMenuScreen");
 }
 
@@ -201,10 +197,6 @@ void MainWindow::onBackRequested() {
 
         menuScreenStack.top()->show();
     }
-}
-
-void MainWindow::onConnectToServerRequest() {
-    webSocketHandler->connectToServer("ws://127.0.0.1:8585");
 }
 
 void MainWindow::onClientConnected() {

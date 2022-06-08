@@ -32,7 +32,6 @@ signals:
     void gameEnded(QStringList userList);
 
     // Screen related signals
-    void connectToServerRequest();
     void displayScreenRequest(QString destinationScreen);
     void createLobbyRequest();
     void joinLobbyRequest(QString newLobbyID);

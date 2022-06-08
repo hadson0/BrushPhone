@@ -24,6 +24,7 @@ void Canvas::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         startPoint = event->pos();
         endPoint = event->pos();
+        this->draw();
         isDrawing = true;
     }
 }

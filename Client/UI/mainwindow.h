@@ -11,7 +11,6 @@
 #include <QCloseEvent>
 
 #include "Controllers/clientmanager.h"
-#include "Controllers/websockethandler.h"
 
 #include "Screens/mainmenuscreen.h"
 #include "Screens/selectionscreen.h"
@@ -29,7 +28,6 @@ class MainWindow : public QMainWindow {
     Screen *gameScreen;
 
     ClientManager *clientManager;
-    WebSocketHandler *webSocketHandler;
 
     void closeEvent(QCloseEvent *event);
 
@@ -50,7 +48,6 @@ public slots:
     void onGameLobbyPhase();
 
     void onBackRequested();
-    void onConnectToServerRequest();
     void onClientConnected();
     void onClientDisconnected();
 

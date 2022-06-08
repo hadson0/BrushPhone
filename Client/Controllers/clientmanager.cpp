@@ -6,7 +6,13 @@ ClientManager::ClientManager(QObject *parent)
     : QObject{parent}, clientID(""), lobbyID(""), nickname("") {
     messageProcessHandler = new MessageProcessHandler(this);
 
-    // Socket related message process handler connections
+    // Web Socket Handler
+    webSocketHandler = WebSocketHandler::getInstance(this);
+    connect(this, &ClientManager::newMessageReadyToSend, webSocketHandler, &WebSocketHandler::sendMessageToServer);
+    connect(webSocketHandler, &WebSocketHandler::newMessageReadyForProcessing, this, &ClientManager::processSocketMessage);
+    connect(webSocketHandler, &WebSocketHandler::connectionError, this, &ClientManager::clientDisconnected);
+
+    // Mmessage process handler
     connect(this, &ClientManager::processSocketMessage, messageProcessHandler, &MessageProcessHandler::processSocketMessage);
     connect(messageProcessHandler, &MessageProcessHandler::setClientID, this, &ClientManager::setClientID);
     connect(messageProcessHandler, &MessageProcessHandler::newLobby, this, &ClientManager::onLobbyJoined);
@@ -21,9 +27,7 @@ ClientManager::ClientManager(QObject *parent)
     connect(messageProcessHandler, &MessageProcessHandler::gameEnded, this, &ClientManager::onGameEnded);
     connect(messageProcessHandler, &MessageProcessHandler::displayRound, this, &ClientManager::displayRound);
 
-    // Screen related message process handler connections
     connect(this, &ClientManager::processScreenMessage, messageProcessHandler, &MessageProcessHandler::processScreenMessage);
-    connect(messageProcessHandler, &MessageProcessHandler::connectToServerRequest, this, &ClientManager::connectToServerRequest);
     connect(messageProcessHandler, &MessageProcessHandler::createLobbyRequest, this, &ClientManager::createLobbyRequest);
     connect(messageProcessHandler, &MessageProcessHandler::joinLobbyRequest, this, &ClientManager::joinLobbyRequested);
     connect(messageProcessHandler, &MessageProcessHandler::quitLobbyRequest, this, &ClientManager::quitLobbyRequest);
@@ -83,6 +87,16 @@ void ClientManager::setLobbyID(QString newLobbyID) {
         } else {
             emit lobbyJoined(newLobbyID);
         }
+    }
+}
+
+void ClientManager::connectToServer() {
+    webSocketHandler->connectToServer("ws://127.0.0.1:8585");
+}
+
+void ClientManager::closeConnection() {
+    if (webSocketHandler->isValid()) {
+        webSocketHandler->close();
     }
 }
 
